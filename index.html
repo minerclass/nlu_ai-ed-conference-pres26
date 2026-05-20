@@ -1533,6 +1533,58 @@
             background: rgba(56, 189, 248, 0.05);
             border-color: var(--accent);
         }
+
+        /* Print stylesheet for PDF exports */
+        @media print {
+            @page {
+                size: landscape;
+                margin: 0;
+            }
+            body {
+                background: #0a0a0b !important;
+                color: #ece8dd !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .ambient-orbs,
+            .progress-bar-container,
+            .drawer-trigger,
+            .nav-drawer,
+            .drawer-overlay,
+            .controls,
+            .template-footer {
+                display: none !important;
+            }
+            .deck-container {
+                display: block !important;
+                position: static !important;
+                width: 100% !important;
+                height: auto !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .slide {
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                box-sizing: border-box !important;
+                padding: 4rem 6rem !important;
+                transform: none !important;
+                margin: 0 !important;
+            }
+            .watermark-bg {
+                opacity: 0.045 !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1568,6 +1620,9 @@
         <div class="drawer-item" onclick="jumpToSlide(9)">10. Assignment Redesign Sandbox</div>
         <div class="drawer-item" onclick="jumpToSlide(10)">11. Equity & Calibration</div>
         <div class="drawer-item" onclick="jumpToSlide(11)">12. The Educational Horizon</div>
+        <div class="drawer-item" onclick="window.print()" style="border-top: 1px solid var(--rule); margin-top: 1rem; color: var(--accent); font-weight: bold;">
+            <i class="fa-solid fa-print" style="margin-right: 8px;"></i>Print / Save to PDF
+        </div>
     </div>
     <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
 
