@@ -1,0 +1,2634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>When the Output Looks Like Learning - AI in Education 2026</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200..900;1,9..144,200..900&family=DM+Sans:opsz,wght@9..40,300..700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- GSAP for Slide Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <style>
+        :root {
+            /* Styling Tokens - Scholarly Dark/Light */
+            --bg: #0a0a0b;
+            --bg-elevated: #141416;
+            --bg-glow: #1a1a1c;
+            --ink: #ece8dd;
+            --ink-soft: #a8a59c;
+            --ink-faint: #6e6c66;
+            --ink-ghost: #3a3934;
+            
+            --accent: #38bdf8;
+            --accent-deep: #0284c7;
+            --accent-cyan: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-rose: #f43f5e;
+            --accent-green: #34d399;
+            --accent-yellow: #f5d000;
+            
+            --rule: rgba(236, 232, 221, 0.08);
+            --rule-strong: rgba(236, 232, 221, 0.22);
+            
+            --serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+            --sans: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: "JetBrains Mono", ui-monospace, monospace;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: var(--sans);
+            background-color: var(--bg);
+            color: var(--ink);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Subtle grid background */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(236,232,221,.015) 1px, transparent 1px),
+                linear-gradient(180deg, rgba(236,232,221,.01) 1px, transparent 1px);
+            background-size: 72px 72px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Ambient Orbs */
+        .ambient-orbs {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            transition: all 1.2s var(--ease);
+        }
+
+        .orb-1 {
+            top: -10%; left: -10%;
+            width: 45vw; height: 45vw;
+            background: radial-gradient(circle, var(--accent-purple), transparent 70%);
+        }
+
+        .orb-2 {
+            bottom: -10%; right: -10%;
+            width: 50vw; height: 50vw;
+            background: radial-gradient(circle, var(--accent-green), transparent 70%);
+        }
+
+        /* Top Progress Bar */
+        .progress-bar-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 2px;
+            background: var(--rule);
+            z-index: 100;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+            transition: width 0.4s var(--ease);
+        }
+
+        /* Presentation Container */
+        .deck-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        /* Individual Slides */
+        .slide {
+            position: absolute;
+            width: 90%;
+            max-width: 1240px;
+            height: 85%;
+            max-height: 720px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.98) translateY(10px);
+            transition: transform 0.6s var(--ease), opacity 0.6s ease;
+            padding-bottom: 6.5rem; 
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: scale(1) translateY(0);
+        }
+
+        /* Header / Footer of Slides */
+        .slide-header {
+            margin-bottom: 1.2rem;
+        }
+
+        .slide-subtitle {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .slide-title {
+            font-family: var(--serif);
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 350;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Text Utilities */
+        .accent-text {
+            color: var(--accent);
+        }
+
+        /* Slide 1: Title Slide (Slightly reduced font to fit wrap safely) */
+        .title-slide {
+            text-align: left;
+            align-items: flex-start;
+        }
+
+        .title-badge {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            border-bottom: 1px solid var(--rule-strong);
+            padding-bottom: 1rem;
+            margin-bottom: 2.5rem;
+            width: 100%;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .title-badge:hover {
+            color: var(--accent-green);
+        }
+
+        .title-slide h1 {
+            font-family: var(--serif);
+            font-size: clamp(2rem, 4.2vw, 3.4rem);
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .title-slide h1 em {
+            font-style: italic;
+            color: var(--accent);
+            font-weight: 250;
+        }
+
+        .title-slide .authors {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--ink);
+            font-weight: 500;
+            margin-top: 1.5rem;
+        }
+
+        .title-slide .affiliation {
+            font-family: var(--sans);
+            font-size: 1rem;
+            color: var(--ink-soft);
+            margin-top: 0.5rem;
+        }
+
+        /* Slide 1 Abstract Modal */
+        .abstract-overlay {
+            position: absolute;
+            top: 6.5rem;
+            left: 0;
+            width: 100%;
+            max-width: 750px;
+            background: rgba(20, 20, 22, 0.95);
+            border: 1px solid var(--rule-strong);
+            padding: 2rem;
+            border-radius: 12px;
+            backdrop-filter: blur(20px);
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: all 0.4s var(--ease);
+        }
+
+        .abstract-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        .abstract-overlay h4 {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+
+        .abstract-overlay p {
+            font-size: 0.98rem;
+            line-height: 1.6;
+            color: var(--ink-soft);
+        }
+
+        /* Glass Cards Grid */
+        .glass-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .glass-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--rule);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s var(--ease);
+            position: relative;
+        }
+
+        /* Interactive details on click */
+        .glass-card.clickable {
+            cursor: pointer;
+        }
+
+        .glass-card.clickable:hover {
+            border-color: var(--rule-strong);
+            transform: translateY(-3px);
+        }
+
+        .glass-card.clickable.active {
+            border-color: var(--accent);
+            background: rgba(56, 189, 248, 0.02);
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-bottom: 1.2rem;
+        }
+
+        .glass-card h3 {
+            font-family: var(--serif);
+            font-size: 1.35rem;
+            margin-bottom: 0.75rem;
+            color: var(--ink);
+            font-weight: 400;
+        }
+
+        .glass-card p {
+            font-size: 0.95rem;
+            color: var(--ink-soft);
+            line-height: 1.6;
+        }
+
+        /* Slide 2: Interactive detail display */
+        .illusion-detail-pane {
+            margin-top: 1.5rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            padding: 1.2rem 2rem;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .illusion-detail-pane span {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: rgba(56, 189, 248, 0.1);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+        }
+
+        .illusion-detail-pane p {
+            font-size: 0.95rem;
+            color: var(--ink);
+            line-height: 1.5;
+        }
+
+        /* Slide 3: Two-column Epistemic Visualizer */
+        .epistemic-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2.5rem;
+            align-items: stretch;
+        }
+
+        /* Visualizer box styling */
+        .epistemic-visualizer {
+            background: var(--bg-elevated);
+            border: 1px solid var(--rule);
+            border-radius: 12px;
+            padding: 2.2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .epistemic-visualizer h4 {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .vis-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .vis-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid rgba(236, 232, 221, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .vis-row.highlight {
+            border-color: rgba(245, 208, 0, 0.3);
+            background: rgba(245, 208, 0, 0.02);
+        }
+
+        .vis-row.highlight-cyan {
+            border-color: rgba(52, 211, 153, 0.3);
+            background: rgba(52, 211, 153, 0.02);
+        }
+
+        .vis-row.highlight-rose {
+            border-color: rgba(244, 63, 94, 0.3);
+            background: rgba(244, 63, 94, 0.02);
+        }
+
+        .vis-label {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            width: 100px;
+            color: var(--ink-faint);
+        }
+
+        .vis-row.highlight .vis-label { color: var(--accent); }
+        .vis-row.highlight-cyan .vis-label { color: var(--accent-green); }
+        .vis-row.highlight-rose .vis-label { color: var(--accent-rose); }
+
+        .vis-flow {
+            flex: 1;
+            font-size: 0.9rem;
+            color: var(--ink-soft);
+        }
+
+        .vis-flow strong {
+            color: var(--ink);
+        }
+
+        /* Slide 4: Interactive Media Ecology Timeline */
+        .timeline-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 1px;
+            background: var(--rule);
+            margin-top: 1rem;
+            border-top: 1px solid var(--rule-strong);
+            border-bottom: 1px solid var(--rule-strong);
+        }
+
+        .timeline-step {
+            flex: 1;
+            background: var(--bg);
+            padding: 1.5rem 1.25rem;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.3s var(--ease);
+            position: relative;
+        }
+
+        .timeline-step:hover,
+        .timeline-step.active {
+            background: var(--bg-elevated);
+        }
+
+        .timeline-step.active::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--accent);
+            box-shadow: 0 0 10px rgba(245, 208, 0, 0.4);
+        }
+
+        .timeline-step.rupture.active::before {
+            background: var(--accent-rose);
+            box-shadow: 0 0 10px rgba(244, 63, 94, 0.4);
+        }
+
+        .step-node {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-step.active .step-node {
+            color: var(--accent);
+        }
+
+        .timeline-step.rupture.active .step-node {
+            color: var(--accent-rose);
+        }
+
+        .step-label {
+            font-family: var(--serif);
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: var(--ink-soft);
+            transition: color 0.3s;
+        }
+
+        .timeline-step.active .step-label {
+            color: var(--ink);
+        }
+
+        .step-details-pane {
+            margin-top: 2rem;
+            min-height: 140px;
+            border-left: 2px solid var(--accent);
+            padding: 1rem 0 1rem 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .step-details-pane.rupture {
+            border-left-color: var(--accent-rose);
+        }
+
+        .step-details-pane h4 {
+            font-family: var(--serif);
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-details-pane.rupture h4 {
+            color: var(--accent-rose);
+        }
+
+        .step-details-pane p {
+            color: var(--ink);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        /* Slide 5: Interactive Anatomy Tabs Layout */
+        .anatomy-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .anatomy-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .anatomy-card-btn {
+            background: var(--bg-elevated);
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            padding: 1.2rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            text-align: left;
+            color: var(--ink-soft);
+        }
+
+        .anatomy-card-btn:hover {
+            border-color: var(--rule-strong);
+        }
+
+        .anatomy-card-btn.active {
+            border-color: var(--accent);
+            background: rgba(56, 189, 248, 0.02);
+        }
+
+        .anatomy-card-btn h3 {
+            font-family: var(--serif);
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: var(--ink-soft);
+            transition: color 0.3s;
+        }
+
+        .anatomy-card-btn span {
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .anatomy-card-btn:hover h3 {
+            color: var(--ink);
+        }
+
+        .anatomy-card-btn.active h3 { 
+            color: var(--accent); 
+        }
+        
+        .anatomy-card-btn.active span { 
+            color: var(--accent); 
+        }
+
+        .anatomy-detail-pane {
+            background: var(--bg-elevated);
+            border: 1px solid var(--rule);
+            border-radius: 12px;
+            padding: 2.5rem;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .anatomy-detail-pane .pane-subtitle {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .anatomy-detail-pane h3 {
+            font-family: var(--serif);
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .anatomy-detail-pane p {
+            color: var(--ink-soft);
+            line-height: 1.6;
+            font-size: 1.02rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .anatomy-detail-pane .intervention-box {
+            border-left: 2px solid var(--accent);
+            padding-left: 1.25rem;
+            font-size: 0.92rem;
+            color: var(--ink);
+            line-height: 1.5;
+        }
+
+        /* Slide 6: Interactive 2x2 Matrix */
+        .matrix-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 1rem;
+            aspect-ratio: 1.2;
+        }
+
+        .matrix-cell {
+            background: var(--bg-elevated);
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+        }
+
+        .matrix-cell h4 {
+            font-family: var(--serif);
+            font-weight: 400;
+            font-size: 1.2rem;
+            margin-bottom: 0.35rem;
+            color: var(--ink-soft);
+            transition: color 0.3s;
+        }
+
+        .matrix-cell span {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .matrix-cell:hover {
+            border-color: var(--rule-strong);
+        }
+
+        .matrix-cell:hover h4 {
+            color: var(--ink);
+        }
+
+        /* Cell 1: Productive Success - Green */
+        .matrix-cell.productive-success-cell.active {
+            border-color: var(--accent-green);
+            background: rgba(52, 211, 153, 0.05);
+        }
+        
+        .matrix-cell.productive-success-cell.active h4 {
+            color: var(--accent-green);
+        }
+        
+        .matrix-cell.productive-success-cell.active span {
+            color: rgba(52, 211, 153, 0.7);
+        }
+
+        /* Cell 2: Productive Failure - Softer Green */
+        .matrix-cell.productive-failure-cell.active {
+            border-color: rgba(52, 211, 153, 0.55);
+            background: rgba(52, 211, 153, 0.02);
+        }
+        
+        .matrix-cell.productive-failure-cell.active h4 {
+            color: rgba(52, 211, 153, 0.8);
+        }
+        
+        .matrix-cell.productive-failure-cell.active span {
+            color: rgba(52, 211, 153, 0.5);
+        }
+
+        /* Cell 3: Unproductive Failure - Yellow */
+        .matrix-cell.unproductive-failure-cell.active {
+            border-color: var(--accent-yellow);
+            background: rgba(245, 208, 0, 0.04);
+        }
+        
+        .matrix-cell.unproductive-failure-cell.active h4 {
+            color: var(--accent-yellow);
+        }
+        
+        .matrix-cell.unproductive-failure-cell.active span {
+            color: rgba(245, 208, 0, 0.7);
+        }
+
+        /* Cell 4: Unproductive Success - Red */
+        .matrix-cell.unproductive-success-cell.active {
+            border-color: var(--accent-rose);
+            background: rgba(244, 63, 94, 0.05);
+        }
+        
+        .matrix-cell.unproductive-success-cell.active h4 {
+            color: var(--accent-rose);
+        }
+        
+        .matrix-cell.unproductive-success-cell.active span {
+            color: rgba(244, 63, 94, 0.7);
+        }
+
+        .matrix-detail-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2.5rem;
+            border: 1px solid var(--rule);
+            background: var(--bg-elevated);
+            border-radius: 12px;
+        }
+
+        .matrix-detail-card h3 {
+            font-family: var(--serif);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .matrix-detail-card p {
+            color: var(--ink-soft);
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+
+        /* Slide 7: Assumptions Explorer */
+        .assumptions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .assumption-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--rule);
+            border-radius: 10px;
+            padding: 1.75rem;
+            cursor: pointer;
+            transition: all 0.4s var(--ease);
+            position: relative;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .assumption-card:hover {
+            border-color: var(--rule-strong);
+            transform: translateY(-2px);
+        }
+
+        .assumption-card.revealed {
+            border-color: var(--accent);
+            background: linear-gradient(180deg, var(--bg-elevated) 0%, rgba(245, 208, 0, 0.03) 100%);
+        }
+
+        .assumption-card .card-num {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 2.4rem;
+            font-weight: 300;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 0.75rem;
+        }
+
+        .assumption-card .card-label {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 0.6rem;
+        }
+
+        .assumption-card .card-text {
+            font-family: var(--serif);
+            font-size: 1.05rem;
+            line-height: 1.45;
+            color: var(--ink);
+            margin-bottom: 1rem;
+        }
+
+        .assumption-card .break-block {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s var(--ease);
+            border-top: 0 solid var(--accent);
+        }
+
+        .assumption-card.revealed .break-block {
+            opacity: 1;
+            max-height: 200px;
+            padding-top: 1rem;
+            margin-top: auto;
+            border-top: 1px dashed var(--accent);
+        }
+
+        .assumption-card .break-label {
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .assumption-card .break-text {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: var(--ink-soft);
+        }
+
+        .assumption-card .click-hint {
+            position: absolute;
+            bottom: 1rem;
+            right: 1.25rem;
+            font-family: var(--mono);
+            font-size: 0.58rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            opacity: 0.6;
+        }
+
+        .assumption-card.revealed .click-hint {
+            display: none;
+        }
+
+        /* Slide 8: Interactive Friction Slider Widget */
+        .slider-widget-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .slider-controls {
+            background: var(--bg-elevated);
+            border: 1px solid var(--rule);
+            border-radius: 12px;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .slider-controls h4 {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .custom-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--rule-strong);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px rgba(245, 208, 0, 0.4);
+            transition: background 0.3s;
+        }
+
+        .custom-slider::-webkit-slider-thumb:hover {
+            background: var(--ink);
+        }
+
+        .slider-ticks {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5px;
+        }
+
+        .slider-ticks span {
+            font-family: var(--mono);
+            font-size: 0.58rem;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+        }
+
+        .slider-output-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--rule);
+            border-radius: 12px;
+            padding: 2.5rem;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .slider-output-card .output-badge {
+            align-self: flex-start;
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .slider-output-card.bypass { border-color: var(--accent-rose); }
+        .slider-output-card.bypass .output-badge { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); }
+
+        .slider-output-card.productive { border-color: var(--accent-cyan); }
+        .slider-output-card.productive .output-badge { background: rgba(56, 189, 248, 0.15); color: var(--accent-cyan); }
+
+        .slider-output-card.exclusionary { border-color: var(--accent-purple); }
+        .slider-output-card.exclusionary .output-badge { background: rgba(168, 85, 247, 0.15); color: var(--accent-purple); }
+
+        .slider-output-card h3 {
+            font-family: var(--serif);
+            font-size: 1.6rem;
+            margin-bottom: 0.75rem;
+            font-weight: 400;
+        }
+
+        .slider-output-card p {
+            color: var(--ink-soft);
+            line-height: 1.6;
+            font-size: 0.98rem;
+        }
+
+        /* Slide 9: 4 Dimensions Panel */
+        .dimensions-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .dimensions-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .dim-tab {
+            padding: 1.2rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dim-tab i {
+            font-size: 1.1rem;
+            color: var(--ink-faint);
+            transition: color 0.3s;
+        }
+
+        .dim-tab span {
+            font-family: var(--serif);
+            font-size: 1.15rem;
+            color: var(--ink-soft);
+            transition: color 0.3s;
+        }
+
+        .dim-tab:hover {
+            border-color: var(--rule-strong);
+        }
+
+        .dim-tab.active {
+            background: rgba(56, 189, 248, 0.04);
+            border-color: var(--accent);
+        }
+
+        .dim-tab.active i,
+        .dim-tab.active span {
+            color: var(--accent);
+        }
+
+        .dim-detail-pane {
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .dim-detail-pane h3 {
+            font-family: var(--serif);
+            font-size: 2rem;
+            margin-bottom: 1.2rem;
+            font-weight: 400;
+        }
+
+        .dim-detail-pane p {
+            color: var(--ink-soft);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .dim-quote {
+            background: var(--bg-elevated);
+            padding: 1.2rem;
+            border-radius: 8px;
+            border-left: 2px solid var(--accent);
+            font-style: italic;
+            color: var(--ink);
+            font-family: var(--serif);
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+
+        /* Slide 10: Assignment Redesign Sandbox */
+        .sandbox-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .sandbox-toggle-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .toggle-btn {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--rule);
+            background: var(--bg-elevated);
+            color: var(--ink-soft);
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+        }
+
+        .toggle-btn.active.frictionless {
+            border-color: var(--accent-rose);
+            color: var(--accent-rose);
+            background: rgba(244, 63, 94, 0.05);
+            box-shadow: 0 0 12px rgba(244, 63, 94, 0.15);
+        }
+
+        .toggle-btn.active.friction-infused {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            background: rgba(52, 211, 153, 0.05);
+            box-shadow: 0 0 12px rgba(52, 211, 153, 0.15);
+        }
+
+        .sandbox-card {
+            border-radius: 12px;
+            border: 1px solid var(--rule);
+            background: var(--bg-elevated);
+            padding: 2rem;
+            transition: all 0.4s var(--ease);
+            display: flex;
+            flex-direction: column;
+            min-height: 320px;
+        }
+
+        .sandbox-card.frictionless-card.active {
+            border-color: rgba(244, 63, 94, 0.4);
+            box-shadow: 0 0 20px rgba(244, 63, 94, 0.05);
+        }
+
+        .sandbox-card.friction-infused-card.active {
+            border-color: rgba(52, 211, 153, 0.4);
+            box-shadow: 0 0 20px rgba(52, 211, 153, 0.05);
+        }
+
+        .sandbox-card .type-badge {
+            align-self: flex-start;
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .sandbox-card.frictionless-card .type-badge {
+            background: rgba(244, 63, 94, 0.15);
+            color: var(--accent-rose);
+        }
+
+        .sandbox-card.friction-infused-card .type-badge {
+            background: rgba(52, 211, 153, 0.15);
+            color: var(--accent-green);
+        }
+
+        .sandbox-card h3 {
+            font-family: var(--serif);
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+        }
+
+        .sandbox-card .prompt-box {
+            background: rgba(0,0,0,0.2);
+            border-left: 2px solid var(--rule);
+            padding: 0.85rem;
+            font-family: var(--mono);
+            font-size: 0.82rem;
+            color: var(--ink-soft);
+            margin-bottom: 1.25rem;
+            border-radius: 0 4px 4px 0;
+            line-height: 1.5;
+        }
+
+        .sandbox-card.frictionless-card.active .prompt-box {
+            border-left-color: var(--accent-rose);
+            color: #ffb3c1;
+        }
+
+        .sandbox-card.friction-infused-card.active .prompt-box {
+            border-left-color: var(--accent-green);
+            color: #a7f3d0;
+        }
+
+        .sandbox-card ul {
+            list-style: none;
+            font-size: 0.9rem;
+            color: var(--ink-soft);
+            line-height: 1.5;
+        }
+
+        .sandbox-card ul li {
+            position: relative;
+            padding-left: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sandbox-card ul li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        .sandbox-card.frictionless-card ul li::before {
+            color: var(--accent-rose);
+        }
+
+        .sandbox-card.friction-infused-card ul li::before {
+            color: var(--accent-green);
+        }
+
+        /* Slide 11: Interactive Scaffolding Explorer */
+        .scaffolding-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .scaffolding-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .scaffolding-card-btn {
+            background: var(--bg-elevated);
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            padding: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .scaffolding-card-btn:hover {
+            border-color: var(--rule-strong);
+        }
+
+        .scaffolding-card-btn.active {
+            border-color: var(--accent-green);
+            background: rgba(52, 211, 153, 0.02);
+        }
+
+        .scaffolding-card-btn h4 {
+            font-family: var(--serif);
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: var(--ink-soft);
+            transition: color 0.3s;
+        }
+
+        .scaffolding-card-btn span {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .scaffolding-card-btn:hover h4 {
+            color: var(--ink);
+        }
+
+        .scaffolding-card-btn.active h4 { 
+            color: var(--accent-green); 
+        }
+        
+        .scaffolding-card-btn.active span {
+            color: var(--accent-green);
+        }
+
+        .scaffolding-detail-pane {
+            background: var(--bg-elevated);
+            border: 1px solid var(--rule);
+            border-radius: 12px;
+            padding: 2.5rem;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .scaffolding-detail-pane h3 {
+            font-family: var(--serif);
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .scaffolding-detail-pane p {
+            color: var(--ink-soft);
+            line-height: 1.6;
+            font-size: 0.98rem;
+        }
+
+        /* Presentation UI Controls - Center Pill */
+        .controls {
+            position: fixed;
+            bottom: 2.2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            background: rgba(20, 20, 22, 0.85);
+            border: 1px solid var(--rule-strong);
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            z-index: 100;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .nav-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid var(--rule);
+            color: var(--ink-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .slide-counter {
+            font-family: var(--mono);
+            font-weight: 500;
+            font-size: 0.72rem;
+            color: var(--ink-soft);
+            letter-spacing: 1px;
+            min-width: 48px;
+            text-align: center;
+        }
+
+        /* Navigation Drawer Trigger - Shifted to Top-Left */
+        .drawer-trigger {
+            position: fixed;
+            top: 1.5rem;
+            left: 2rem;
+            z-index: 100;
+            color: var(--ink-faint);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .drawer-trigger:hover {
+            color: var(--accent);
+        }
+
+        /* Drawer CSS Classes */
+        .nav-drawer {
+            position: fixed;
+            top: 0; 
+            left: -320px;
+            width: 300px; 
+            height: 100%;
+            background: rgba(10, 10, 11, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--rule);
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 200;
+            transition: left 0.4s var(--ease);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+        }
+
+        .nav-drawer.open {
+            left: 0;
+        }
+
+        .drawer-close {
+            align-self: flex-end;
+            cursor: pointer;
+            color: var(--ink-faint);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            transition: color 0.3s;
+        }
+
+        .drawer-close:hover {
+            color: var(--accent-rose);
+        }
+
+        .drawer-item {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--ink-soft);
+            font-family: var(--serif);
+            font-weight: 400;
+            font-style: italic;
+            transition: all 0.3s;
+        }
+
+        .drawer-item:hover,
+        .drawer-item.active {
+            background: var(--bg-elevated);
+            color: var(--accent);
+            padding-left: 1.25rem;
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh;
+            background: rgba(0,0,0,0.6);
+            z-index: 150;
+            display: none;
+        }
+
+        .drawer-overlay.show {
+            display: block;
+        }
+
+        /* Persistent Logo Placement */
+        .template-footer {
+            position: fixed;
+            bottom: 2.2rem;
+            left: 4rem;
+            right: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            z-index: 90;
+            pointer-events: none;
+        }
+
+        /* NLU Logo styling */
+        .nlu-footer-logo {
+            display: flex;
+            align-items: center;
+            pointer-events: auto;
+        }
+
+        /* AI in Education Logo styling */
+        .aied-footer-logo {
+            display: flex;
+            align-items: center;
+            pointer-events: auto;
+            text-align: right;
+            transition: opacity 0.4s var(--ease);
+        }
+
+        /* Custom watermark for Title and Divider slides */
+        .watermark-bg {
+            position: absolute;
+            bottom: -5%;
+            right: -5%;
+            width: 50%;
+            height: 60%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.035;
+            transition: opacity 0.8s var(--ease);
+        }
+
+        .slide.active .watermark-bg {
+            opacity: 0.045;
+        }
+
+        /* Interaction micro elements */
+        .prompt-btn {
+            background: transparent;
+            border: 1px solid var(--rule-strong);
+            color: var(--accent);
+            padding: 0.5rem 1.2rem;
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+
+        .prompt-btn:hover {
+            background: rgba(56, 189, 248, 0.05);
+            border-color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-orbs">
+        <div class="orb orb-1" id="orb-1"></div>
+        <div class="orb orb-2" id="orb-2"></div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <!-- Navigation Drawer Trigger -->
+    <div class="drawer-trigger" onclick="toggleDrawer()">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+
+    <!-- Navigation Drawer -->
+    <div class="nav-drawer" id="nav-drawer">
+        <div class="drawer-close" onclick="toggleDrawer()">
+            <i class="fa-solid fa-xmark"></i>
+        </div>
+        <div class="drawer-item" onclick="jumpToSlide(0)">1. Title & Abstract</div>
+        <div class="drawer-item" onclick="jumpToSlide(1)">2. The Illusion of Performance</div>
+        <div class="drawer-item" onclick="jumpToSlide(2)">3. Epistemic Foundations</div>
+        <div class="drawer-item" onclick="jumpToSlide(3)">4. Media Ecology Timeline</div>
+        <div class="drawer-item" onclick="jumpToSlide(4)">5. Anatomy of Tertiary Algorithmicity</div>
+        <div class="drawer-item" onclick="jumpToSlide(5)">6. Unproductive Success Matrix</div>
+        <div class="drawer-item" onclick="jumpToSlide(6)">7. Assumptions & Realities</div>
+        <div class="drawer-item" onclick="jumpToSlide(7)">8. Calibrating Friction Settings</div>
+        <div class="drawer-item" onclick="jumpToSlide(8)">9. The 4 Dimensions of Friction</div>
+        <div class="drawer-item" onclick="jumpToSlide(9)">10. Assignment Redesign Sandbox</div>
+        <div class="drawer-item" onclick="jumpToSlide(10)">11. Equity & Calibration</div>
+        <div class="drawer-item" onclick="jumpToSlide(11)">12. The Educational Horizon</div>
+    </div>
+    <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
+
+    <!-- Master Template Footer -->
+    <div class="template-footer">
+        <!-- NLU Logo Crest & Label -->
+        <div class="nlu-footer-logo">
+            <svg viewBox="0 0 100 100" width="38" height="38" style="display:inline-block; vertical-align:middle; margin-right: 10px;">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#38bdf8" stroke-width="2.5" />
+                <circle cx="50" cy="50" r="39" fill="none" stroke="#38bdf8" stroke-dasharray="2,2" stroke-width="1.2" />
+                <polygon points="50,22 25,68 75,68" fill="none" stroke="#ece8dd" stroke-width="2.5" />
+                <polygon points="50,33 33,63 67,63" fill="#38bdf8" opacity="0.3" />
+                <polygon points="50,33 33,63 67,63" fill="none" stroke="#38bdf8" stroke-width="1.5" />
+                <circle cx="50" cy="53" r="3.5" fill="#ece8dd" />
+            </svg>
+            <div style="display:inline-block; vertical-align:middle; text-align:left; font-family:var(--sans); line-height:1.15;">
+                <div style="font-size: 9px; font-weight: 700; color: #ece8dd; letter-spacing: 1px; text-transform: uppercase;">NATIONAL LOUIS</div>
+                <div style="font-size: 10px; font-weight: 700; color: #ece8dd; letter-spacing: 1.5px; text-transform: uppercase;">UNIVERSITY</div>
+                <div style="font-size: 7px; color: #38bdf8; font-weight: 500; text-transform: uppercase; margin-top: 1px;">National College of Education</div>
+            </div>
+        </div>
+
+        <!-- AI in Education Conference Logo -->
+        <div class="aied-footer-logo" id="aied-footer-logo">
+            <div style="display:inline-block; vertical-align:middle; text-align:right; font-family:var(--sans); line-height:1.15; margin-right: 10px;">
+                <div style="font-size: 10px; font-weight: 700; color: #ece8dd; letter-spacing: 0.5px; text-transform: uppercase;">AI in Education</div>
+                <div style="font-size: 7.5px; color: #a8a59c; margin-top: 1px;">Research, Practice, and Perspectives</div>
+                <div style="display: inline-block; font-size: 6.5px; color: #0a0a0b; background: var(--accent); font-weight: 700; padding: 1px 4px; border-radius: 2px; margin-top: 2px; text-transform: uppercase;">Mini Conference</div>
+            </div>
+            <svg viewBox="0 0 120 100" width="46" height="38" style="display:inline-block; vertical-align:middle;">
+                <path d="M10,80 Q30,75 60,80 Q90,75 110,80 L110,48 Q90,43 60,48 Q30,43 10,48 Z" fill="none" stroke="#38bdf8" stroke-width="2.2" />
+                <line x1="60" y1="48" x2="60" y2="80" stroke="#38bdf8" stroke-width="2.2" />
+                <path d="M40,53 L40,32 Q40,22 25,22" fill="none" stroke="#38bdf8" stroke-width="1.5" />
+                <circle cx="25" cy="22" r="3.2" fill="#38bdf8" />
+                <path d="M48,50 L48,18 Q48,10 35,10" fill="none" stroke="#38bdf8" stroke-width="1.5" />
+                <circle cx="35" cy="10" r="3.2" fill="#38bdf8" />
+                <path d="M60,48 L60,13 L75,13" fill="none" stroke="#38bdf8" stroke-width="1.5" />
+                <circle cx="75" cy="13" r="3.2" fill="#38bdf8" />
+                <path d="M80,53 L80,27 Q80,18 95,18" fill="none" stroke="#38bdf8" stroke-width="1.5" />
+                <circle cx="95" cy="18" r="3.2" fill="#38bdf8" />
+                <path d="M72,51 L72,22 Q72,15 85,15" fill="none" stroke="#38bdf8" stroke-width="1.5" />
+                <circle cx="85" cy="15" r="3.2" fill="#38bdf8" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Presentation Deck -->
+    <div class="deck-container">
+        
+        <!-- SLIDE 1: Title Slide (Interactive Abstract Overlay) -->
+        <div class="slide active title-slide" id="slide-0">
+            <span class="title-badge" onclick="toggleAbstract()">Accepted for Presentation &bull; AI in Education 2026 (Click for Abstract)</span>
+            <h1>When the Output Looks Like Learning: <br><em>Tertiary Algorithmicity, Unproductive Success, <br>and the Case for Pedagogical Friction in K–12 Schools</em></h1>
+            <div class="authors">Micah J. Miner, CETL, Ed.S.</div>
+            <div class="affiliation">Doctoral Candidate, National Louis University &bull; Curriculum, Advocacy, and Policy</div>
+
+            <!-- Slide-down Abstract Card -->
+            <div class="abstract-overlay" id="abstract-overlay">
+                <h4>Presentation Abstract</h4>
+                <p>Generative AI introduces a critical rupture in K-12 education: the separation of performance from learning. When students use LLMs to bypass symbol production, they achieve "unproductive success"—flawless outputs without schema construction. This paper proposes a theory of Tertiary Algorithmicity, arguing that educators must design "pedagogical friction" to calibrate desirable cognitive difficulties while ensuring equity.</p>
+                <button class="prompt-btn" style="margin-top:1.5rem; display:block;" onclick="toggleAbstract()">Close Abstract</button>
+            </div>
+
+            <!-- Large Watermark Logo -->
+            <div class="watermark-bg">
+                <svg viewBox="0 0 120 100" width="100%" height="100%">
+                    <path d="M10,80 Q30,75 60,80 Q90,75 110,80 L110,35 Q90,30 60,35 Q30,30 10,35 Z" fill="none" stroke="#38bdf8" stroke-width="2.5" />
+                    <line x1="60" y1="35" x2="60" y2="80" stroke="#38bdf8" stroke-width="2.5" />
+                    <path d="M35,60 L35,25 Q35,10 15,10" fill="none" stroke="#38bdf8" stroke-width="2" />
+                    <circle cx="15" cy="10" r="4.5" fill="#38bdf8" />
+                    <path d="M45,55 L45,15 Q45,5 25,5" fill="none" stroke="#38bdf8" stroke-width="2" />
+                    <circle cx="25" cy="5" r="4.5" fill="#38bdf8" />
+                    <path d="M60,35 L60,8 L80,8" fill="none" stroke="#38bdf8" stroke-width="2" />
+                    <circle cx="80" cy="8" r="4.5" fill="#38bdf8" />
+                    <path d="M85,60 L85,25 Q85,12 105,12" fill="none" stroke="#38bdf8" stroke-width="2" />
+                    <circle cx="105" cy="12" r="4.5" fill="#38bdf8" />
+                    <path d="M75,57 L75,20 Q75,10 90,10" fill="none" stroke="#38bdf8" stroke-width="2" />
+                    <circle cx="90" cy="10" r="4.5" fill="#38bdf8" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: The Illusion of Performance (Interactive Card stats) -->
+        <div class="slide" id="slide-1">
+            <div class="slide-header">
+                <div class="slide-subtitle">The Dilemma</div>
+                <h2 class="slide-title">The Illusion of Performance (Click cards to analyze statistics)</h2>
+            </div>
+            <div class="slide-content">
+                <div class="glass-grid">
+                    <div class="glass-card clickable active" id="card-illusion-1" onclick="setIllusionDetail(1)">
+                        <div class="card-icon"><i class="fa-solid fa-file-signature"></i></div>
+                        <h3>The Flawless Essay</h3>
+                        <p>An 8th grader submits an essay with a clear thesis, smooth transitions, and solid evidence. By every rubric metric, it is proficient. Yet, the student generated all text via an LLM. Does this constitute learning?</p>
+                    </div>
+                    <div class="glass-card clickable" id="card-illusion-2" onclick="setIllusionDetail(2)">
+                        <div class="card-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                        <h3>The Adoption Gap</h3>
+                        <p>K-12 schools are in a rapid, uncoordinated scramble. While over 60% of school leaders integrate tools, only 31% of public schools have written guidelines (NCES, 2024).</p>
+                    </div>
+                    <div class="glass-card clickable" id="card-illusion-3" onclick="setIllusionDetail(3)">
+                        <div class="card-icon"><i class="fa-solid fa-code-branch"></i></div>
+                        <h3>Performance &ne; Learning</h3>
+                        <p>Current institutional responses focus on either detection or integration. Both miss the core problem: generative AI bypasses the cognitive resistance essential for durable learning.</p>
+                    </div>
+                </div>
+
+                <div class="illusion-detail-pane" id="illusion-detail-pane">
+                    <span>CASE ANALYSIS</span>
+                    <p id="illusion-detail-text">Flawless prose creates a false signal. It deceives teachers and grading rubrics alike into certifying conceptual understanding that was never assembled in the student's brain.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Key Terms (Interactive Schematic Visualizer) -->
+        <div class="slide" id="slide-2">
+            <div class="slide-header">
+                <div class="slide-subtitle">Vocabulary</div>
+                <h2 class="slide-title">Key Epistemic Foundations (Select concept to trace visual flow)</h2>
+            </div>
+            <div class="slide-content">
+                <div class="epistemic-layout">
+                    <div class="dimensions-menu">
+                        <div class="dim-tab active" onclick="setEpistemicVis(1)">
+                            <i class="fa-solid fa-pen-fancy"></i>
+                            <span>Symbolic Production</span>
+                        </div>
+                        <div class="dim-tab" onclick="setEpistemicVis(2)">
+                            <i class="fa-solid fa-globe"></i>
+                            <span>Symbolic Environment</span>
+                        </div>
+                        <div class="dim-tab" style="border-color: rgba(244, 63, 94, 0.2);" onclick="setEpistemicVis(3)">
+                            <i class="fa-solid fa-rotate-left" style="color: var(--accent-rose);"></i>
+                            <span>Cognitive Bypass</span>
+                        </div>
+                    </div>
+
+                    <div class="epistemic-visualizer">
+                        <h4 id="vis-title">Process: Symbolic Production</h4>
+                        <div class="vis-container" id="vis-container">
+                            <div class="vis-row highlight">
+                                <span class="vis-label">Step 1</span>
+                                <div class="vis-flow"><strong>Conceptual Schema</strong> in long term memory triggers search and retrieval.</div>
+                            </div>
+                            <div class="vis-row">
+                                <span class="vis-label">Step 2</span>
+                                <div class="vis-flow"><strong>Active Assembly</strong>: Wresting with grammar, syntax, and outline structures.</div>
+                            </div>
+                            <div class="vis-row">
+                                <span class="vis-label">Step 3</span>
+                                <div class="vis-flow"><strong>Externalized Artifact</strong>: Draft reflects deep structural understanding.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: Media Ecology Timeline -->
+        <div class="slide" id="slide-3">
+            <div class="slide-header">
+                <div class="slide-subtitle">Theoretical Framework</div>
+                <h2 class="slide-title">Extending Walter Ong's Media Ecology (Click timeline nodes)</h2>
+            </div>
+            <div class="slide-content">
+                <div class="timeline-container">
+                    <div class="timeline-step active" onclick="setTimelineStage(1, false)">
+                        <div class="step-node">1</div>
+                        <div class="step-label">Primary Orality</div>
+                    </div>
+                    <div class="timeline-step" onclick="setTimelineStage(2, false)">
+                        <div class="step-node">2</div>
+                        <div class="step-label">Literacy</div>
+                    </div>
+                    <div class="timeline-step" onclick="setTimelineStage(3, false)">
+                        <div class="step-node">3</div>
+                        <div class="step-label">Secondary Orality</div>
+                    </div>
+                    <div class="timeline-step" onclick="setTimelineStage(4, false)">
+                        <div class="step-node">4</div>
+                        <div class="step-label">Algorithmic Sec.</div>
+                    </div>
+                    <div class="timeline-step rupture" onclick="setTimelineStage(5, true)">
+                        <div class="step-node">5</div>
+                        <div class="step-label">Tertiary Alg.</div>
+                    </div>
+                </div>
+
+                <div class="step-details-pane" id="timeline-details-pane">
+                    <h4 id="timeline-stage-title">Primary Orality</h4>
+                    <p id="timeline-stage-desc">Preserved knowledge is Situational, communal, and mnemonic. Language is transient, and thoughts must be formulated in memorable patterns to endure.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: Anatomy of Tertiary Algorithmicity (Interactive Tabs) -->
+        <div class="slide" id="slide-4">
+            <div class="slide-header">
+                <div class="slide-subtitle">Proposed Stage</div>
+                <h2 class="slide-title">The Anatomy of Tertiary Algorithmicity</h2>
+            </div>
+            <div class="slide-content">
+                <div class="anatomy-layout">
+                    <div class="anatomy-menu">
+                        <button class="anatomy-card-btn active" onclick="setAnatomyPane(1)">
+                            <h3>1. Noetic Displacement</h3>
+                            <span>Cognitive operations externalized</span>
+                        </button>
+                        <button class="anatomy-card-btn" onclick="setAnatomyPane(2)">
+                            <h3>2. Rhetorical Saturation</h3>
+                            <span>Synthetic prose environments</span>
+                        </button>
+                        <button class="anatomy-card-btn" onclick="setAnatomyPane(3)">
+                            <h3>3. Existential Abstraction</h3>
+                            <span>Decoupled personal commit</span>
+                        </button>
+                        <button class="anatomy-card-btn" onclick="setAnatomyPane(4)">
+                            <h3>4. Infrastructural Consol.</h3>
+                            <span>Distal commercial rules</span>
+                        </button>
+                    </div>
+
+                    <div class="anatomy-detail-pane" id="anatomy-detail-pane">
+                        <span class="pane-subtitle" id="anatomy-subtitle">Anatomy Component 1</span>
+                        <h3 id="anatomy-title">Noetic Displacement</h3>
+                        <p id="anatomy-desc">Cognitive operations are externalized. Generative models construct syntax and formulate semantic connections that previously required human internal thought.</p>
+                        <div class="intervention-box" id="anatomy-intervention">
+                            <strong>Key Intervention:</strong> Require initial brainstorms and logical mappings to be generated internal to the student before using any automated layout aids.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: Unproductive Success Matrix -->
+        <div class="slide" id="slide-5">
+            <div class="slide-header">
+                <div class="slide-subtitle">Learning Science</div>
+                <h2 class="slide-title">Kapur's Matrix & Desirable Difficulties (Click quadrants)</h2>
+            </div>
+            <div class="slide-content">
+                <div class="matrix-layout">
+                    <div class="matrix-grid">
+                        <div class="matrix-cell productive-success-cell" onclick="setMatrixCell(1, 'Productive Success', 'The ideal state where a student achieves the target performance through rigorous mental effort, successfully building long-term memory schemas.')">
+                            <h4>Productive Success</h4>
+                            <span>Performance High / Learning High</span>
+                        </div>
+                        <div class="matrix-cell productive-failure-cell" onclick="setMatrixCell(2, 'Productive Failure', 'Struggling with a challenging task before instruction. It triggers search mechanisms in memory, making subsequent instruction far more effective.')">
+                            <h4>Productive Failure</h4>
+                            <span>Performance Low / Learning High</span>
+                        </div>
+                        <div class="matrix-cell unproductive-failure-cell" onclick="setMatrixCell(3, 'Unproductive Failure', 'The student is stuck, fails to perform, and receives no scaffolding or conceptual redirection. Learning and output are both absent.')">
+                            <h4>Unproductive Failure</h4>
+                            <span>Performance Low / Learning Low</span>
+                        </div>
+                        <div class="matrix-cell unproductive-success-cell active" onclick="setMatrixCell(4, 'Unproductive Success', 'The core threat of Generative AI. The output looks flawless, but the student bypassed the desirable difficulties. Retrieval strength and schema consolidation are zero.')">
+                            <h4>Unproductive Success</h4>
+                            <span>Performance High / Learning Low</span>
+                        </div>
+                    </div>
+                    <div class="matrix-detail-card" id="matrix-detail-card" style="border-color: rgba(244, 63, 94, 0.2);">
+                        <h3 id="matrix-detail-title" style="color: var(--accent-rose);">Unproductive Success</h3>
+                        <p id="matrix-detail-desc">The core threat of Generative AI. The output looks flawless, but the student bypassed the desirable difficulties. Retrieval strength and schema consolidation are zero.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: Assumptions vs. Realities -->
+        <div class="slide" id="slide-6">
+            <div class="slide-header">
+                <div class="slide-subtitle">Pedagogical Friction</div>
+                <h2 class="slide-title">Assumptions vs. Cognitive Realities (Click cards to reveal)</h2>
+            </div>
+            <div class="slide-content">
+                <div class="assumptions-grid">
+                    <!-- Assumption Card 1 -->
+                    <div class="assumption-card" onclick="toggleAssumption(this)">
+                        <div class="card-num">I</div>
+                        <div class="card-label">The Assumption</div>
+                        <div class="card-text">Immediate output proficiency equals concept mastery and learning.</div>
+                        <div class="break-block">
+                            <div class="break-label">The Reality</div>
+                            <div class="break-text">Desirable difficulty is bypassed. High-quality text masks low-quality cognitive processing, leaving memory schemas undeveloped.</div>
+                        </div>
+                        <span class="click-hint">Click to Reveal</span>
+                    </div>
+
+                    <!-- Assumption Card 2 -->
+                    <div class="assumption-card" onclick="toggleAssumption(this)">
+                        <div class="card-num">II</div>
+                        <div class="card-label">The Assumption</div>
+                        <div class="card-text">Bypassing draft-writing accelerates communication and learning.</div>
+                        <div class="break-block">
+                            <div class="break-label">The Reality</div>
+                            <div class="break-text">Writing is not just expression; it is epistemic. The act of drafting is the actual site where thought is formulated.</div>
+                        </div>
+                        <span class="click-hint">Click to Reveal</span>
+                    </div>
+
+                    <!-- Assumption Card 3 -->
+                    <div class="assumption-card" onclick="toggleAssumption(this)">
+                        <div class="card-num">III</div>
+                        <div class="card-label">The Assumption</div>
+                        <div class="card-text">Strict detection tools are sufficient to protect academic integrity.</div>
+                        <div class="break-block">
+                            <div class="break-label">The Reality</div>
+                            <div class="break-text">Deterrence leads to a technological arms race. Only restructured task mechanics align incentives with real intellectual growth.</div>
+                        </div>
+                        <span class="click-hint">Click to Reveal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: The Case for Pedagogical Friction (Interactive Slider Sandbox) -->
+        <div class="slide" id="slide-7">
+            <div class="slide-header">
+                <div class="slide-subtitle">The Thesis</div>
+                <h2 class="slide-title">Calibrating Friction for Durable Schema Construction</h2>
+            </div>
+            <div class="slide-content">
+                <div class="slider-widget-layout">
+                    <div class="slider-controls">
+                        <h4>Friction Calibrator Sandbox</h4>
+                        <div class="slider-container">
+                            <label style="font-size:0.9rem; color:var(--ink-soft);">Adjust Friction Setting:</label>
+                            <input type="range" min="0" max="2" value="1" class="custom-slider" id="frictionSlider" oninput="onFrictionSliderChange(this.value)">
+                            <div class="slider-ticks">
+                                <span>0% (Frictionless)</span>
+                                <span>50% (Calibrated)</span>
+                                <span>100% (Exclusionary)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slider-output-card productive" id="slider-output-card">
+                        <span class="output-badge" id="slider-output-badge">Productive Friction</span>
+                        <h3 id="slider-output-title">Calibrated Desirable Difficulties</h3>
+                        <p id="slider-output-desc">Optimal level. Scaffolds cognitive challenge, preserving schema construction while leveraging AI as a critical dialogue partner rather than an outsourcing agent.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: Four Dimensions of Friction -->
+        <div class="slide" id="slide-8">
+            <div class="slide-header">
+                <div class="slide-subtitle">The Design Model</div>
+                <h2 class="slide-title">Four Dimensions of Pedagogical Friction (Select tabs)</h2>
+            </div>
+            <div class="slide-content">
+                <div class="dimensions-layout">
+                    <div class="dimensions-menu">
+                        <div class="dim-tab active" onclick="setDimensionTab(1)">
+                            <i class="fa-solid fa-brain"></i>
+                            <span>Noetic Friction</span>
+                        </div>
+                        <div class="dim-tab" onclick="setDimensionTab(2)">
+                            <i class="fa-solid fa-users"></i>
+                            <span>Rhetorical Friction</span>
+                        </div>
+                        <div class="dim-tab" onclick="setDimensionTab(3)">
+                            <i class="fa-solid fa-fingerprint"></i>
+                            <span>Existential Friction</span>
+                        </div>
+                        <div class="dim-tab" onclick="setDimensionTab(4)">
+                            <i class="fa-solid fa-building-columns"></i>
+                            <span>Infrastructural Friction</span>
+                        </div>
+                    </div>
+                    <div class="dim-detail-pane" id="dim-detail-pane">
+                        <h3 id="dim-detail-title" style="color: var(--accent);">Noetic Friction</h3>
+                        <p id="dim-detail-desc">Preserves internal cognitive struggle. Requires students to struggle with concepts (e.g., initial drafts, thinking journals) before consulting AI tools.</p>
+                        <div class="dim-quote" id="dim-detail-quote">"The necessary resistance encountered when wrestling with complex ideas, synthesizing information, and engaging in deliberate practice."</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: Assignment Redesign Sandbox -->
+        <div class="slide" id="slide-9">
+            <div class="slide-header">
+                <div class="slide-subtitle">Redesign Sandbox</div>
+                <h2 class="slide-title">Frictionless vs. Friction-Infused Prompts (Toggle views)</h2>
+            </div>
+            <div class="slide-content">
+                <div class="sandbox-toggle-bar">
+                    <button class="toggle-btn frictionless active" onclick="toggleSandbox('frictionless')">Frictionless (AI Bypass)</button>
+                    <button class="toggle-btn friction-infused" onclick="toggleSandbox('infused')">Friction-Infused (Learning)</button>
+                </div>
+                <div class="sandbox-layout">
+                    <!-- Left: Frictionless Card -->
+                    <div class="sandbox-card frictionless-card active" id="fless-card">
+                        <span class="type-badge">Frictionless Assignment</span>
+                        <h3>Historical Argument Essay</h3>
+                        <div class="prompt-box">
+                            "Write a 5-paragraph essay on the key causes of the American Civil War, utilizing three primary sources."
+                        </div>
+                        <ul>
+                            <li><strong>Submission:</strong> Flawless prose generated by LLM in 3 seconds.</li>
+                            <li><strong>Cognitive Action:</strong> Copy, paste, submit. Bypasses drafting and retrieval.</li>
+                            <li><strong>Outcome:</strong> Unproductive Success. High score, zero schema construction.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Right: Friction-Infused Card -->
+                    <div class="sandbox-card friction-infused-card" id="infused-card">
+                        <span class="type-badge">Friction-Infused Framework</span>
+                        <h3>Epistemic Critique & Synthesis</h3>
+                        <div class="prompt-box">
+                            "Generate an LLM outline. Handwrite a critique of its historical biases. Formulate your final thesis live."
+                        </div>
+                        <ul>
+                            <li><strong>Submission:</strong> Live oral defense + handwritten critique + final synthesis.</li>
+                            <li><strong>Cognitive Action:</strong> Analysis of AI bias, metacognitive debate, schema activation.</li>
+                            <li><strong>Outcome:</strong> Productive Success. Active retrieval and durable conceptual acquisition.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: Equity & Calibration (Interactive Accommodation Profiles) -->
+        <div class="slide" id="slide-10">
+            <div class="slide-header">
+                <div class="slide-subtitle">Policy and Practice</div>
+                <h2 class="slide-title">Calibrating Support: Accommodation Profiles (Select Profile)</h2>
+            </div>
+            <div class="slide-content">
+                <div class="scaffolding-layout">
+                    <div class="scaffolding-menu">
+                        <div class="scaffolding-card-btn active" onclick="setScaffoldingProfile(1)">
+                            <span>Profile 1</span>
+                            <h4>English Language Learner</h4>
+                        </div>
+                        <div class="scaffolding-card-btn" onclick="setScaffoldingProfile(2)">
+                            <span>Profile 2</span>
+                            <h4>Student with Learning Disability (Dysgraphia)</h4>
+                        </div>
+                        <div class="scaffolding-card-btn" onclick="setScaffoldingProfile(3)">
+                            <span>Profile 3</span>
+                            <h4>Advanced Researcher</h4>
+                        </div>
+                    </div>
+                    <div class="scaffolding-detail-pane" id="scaffolding-detail-pane">
+                        <h3 id="scaffold-title" style="color:var(--accent-green)">English Language Learner</h3>
+                        <p id="scaffold-desc"><strong>Friction Calibration:</strong> Minimize mechanical language barriers (exclusionary friction) by allowing AI translation or dictionary extensions. However, preserve the core conceptual friction: requires organizing arguments and syntheses internally.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: Conclusion (Interactive Seminar Discussion Generator) -->
+        <div class="slide title-slide" id="slide-11">
+            <span class="title-badge">AI Ed 2026</span>
+            <h2 style="font-family: var(--serif); font-size: clamp(1.8rem, 3.8vw, 3rem); font-weight: 300; max-width: 900px; line-height: 1.25; margin-bottom: 1rem;">
+                "We must design classrooms where the output is <span class="accent-text">the artifact of learning</span>, not a proxy that displaces it."
+            </h2>
+            
+            <div id="seminar-pane" style="background: rgba(56, 189, 248, 0.03); border: 1px solid var(--rule-strong); padding: 1.2rem; border-radius: 8px; max-width: 650px; margin-bottom: 1.5rem; min-height: 90px; display: flex; flex-direction: column; justify-content: center;">
+                <span style="font-family:var(--mono); font-size:0.6rem; color:var(--accent); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.4rem;">Audience Q&A discussion prompt</span>
+                <p id="seminar-question" style="font-size: 0.98rem; font-style: italic; line-height: 1.5; color: var(--ink);">"How can we measure learning in an environment where output is no longer a reliable proxy?"</p>
+            </div>
+            
+            <button class="prompt-btn" onclick="generateSeminarPrompt()">Generate Next Seminar Prompt</button>
+
+            <!-- Large Watermark Logo -->
+            <div class="watermark-bg">
+                <svg viewBox="0 0 120 100" width="100%" height="100%">
+                    <path d="M10,80 Q30,75 60,80 Q90,75 110,80 L110,35 Q90,30 60,35 Q30,30 10,35 Z" fill="none" stroke="#38bdf8" stroke-width="2.5" />
+                    <line x1="60" y1="35" x2="60" y2="80" stroke="#38bdf8" stroke-width="2.5" />
+                    <path d="M35,60 L35,25 Q35,10 15,10" fill="none" stroke="#38bdf8" stroke-width="2" />
+                    <circle cx="15" cy="10" r="4.5" fill="#38bdf8" />
+                    <path d="M45,55 L45,15 Q45,5 25,5" fill="none" stroke="#38bdf8" stroke-width="2" />
+                    <circle cx="25" cy="5" r="4.5" fill="#38bdf8" />
+                    <path d="M60,35 L60,8 L80,8" fill="none" stroke="#38bdf8" stroke-width="2" />
+                    <circle cx="80" cy="8" r="4.5" fill="#38bdf8" />
+                    <path d="M85,60 L85,25 Q85,12 105,12" fill="none" stroke="#38bdf8" stroke-width="2" />
+                    <circle cx="105" cy="12" r="4.5" fill="#38bdf8" />
+                    <path d="M75,57 L75,20 Q75,10 90,10" fill="none" stroke="#38bdf8" stroke-width="2" />
+                    <circle cx="90" cy="10" r="4.5" fill="#38bdf8" />
+                </svg>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- UI Controls (Center Aligned to avoid logo crowding) -->
+    <div class="controls">
+        <div class="nav-btn" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i></div>
+        <div class="slide-counter"><span id="current-slide-num">1</span> / <span id="total-slide-num">12</span></div>
+        <div class="nav-btn" onclick="nextSlide()"><i class="fa-solid fa-chevron-right"></i></div>
+    </div>
+
+    <script>
+        const totalSlides = 12;
+        let currentSlide = 0;
+
+        // Slide details storage
+        const timelineStages = [
+            {
+                title: "Primary Orality",
+                desc: "Preserved knowledge is Situational, communal, and mnemonic. Language is transient, and thoughts must be formulated in memorable patterns to endure.",
+                rupture: false
+            },
+            {
+                title: "Literacy",
+                desc: "Handwritten and typographic media externalize memory. Enables analytical detachment, individual authorship, systematic compilation, and abstract reasoning.",
+                rupture: false
+            },
+            {
+                title: "Secondary Orality",
+                desc: "Electronic media (broadcast, television) retrieves the communal qualities of orality, but functions entirely through literate preparation (scripts, schedules, cues).",
+                rupture: false
+            },
+            {
+                title: "Algorithmic Secondary Orality",
+                desc: "Digital spaces where human authorship persists, but distribution, recommendation, and visibility are mediated by opaque computational systems.",
+                rupture: false
+            },
+            {
+                title: "Tertiary Algorithmicity",
+                desc: "Categorical Rupture. Generative neural networks generate the symbolic representations autonomously. The human author becomes optional, shifting cognitive synthesis to the machine.",
+                rupture: true
+            }
+        ];
+
+        const dimensions = [
+            {
+                title: "Noetic Friction",
+                desc: "Preserves internal cognitive struggle. Requires students to struggle with concepts (e.g., initial drafts, thinking journals) before consulting AI tools.",
+                quote: "The necessary resistance encountered when wrestling with complex ideas, synthesizing information, and engaging in deliberate practice.",
+                color: "var(--accent)"
+            },
+            {
+                title: "Rhetorical Friction",
+                desc: "Preserves the epistemic discovery of writing. Focuses assignments on situated experiences, local research, and oral defenses of ideas to prevent text outsourcing.",
+                quote: "The friction of translating internal thought into a structure that an external audience can understand.",
+                color: "var(--accent-purple)"
+            },
+            {
+                title: "Existential Friction",
+                desc: "Cultivates intellectual character. Requires students to sit with uncertainty, vulnerability, and ambiguity during the process of inquiry.",
+                quote: "The personal stake and authorial stance that connects the learner's identity to the work produced.",
+                color: "var(--accent-green)"
+            },
+            {
+                title: "Infrastructural Friction",
+                desc: "Focuses on policy, systems, and grading. Distinguishes productive accommodation (for language barriers or physical limitations) from cognitive bypass.",
+                quote: "Policy and institutional conditions that either enable or constrain the preservation of the other three dimensions of friction.",
+                color: "var(--accent-rose)"
+            }
+        ];
+
+        // Slide 1 Interaction: Toggle Abstract modal
+        function toggleAbstract() {
+            const overlay = document.getElementById('abstract-overlay');
+            overlay.classList.toggle('open');
+        }
+
+        // Slide 2 Interaction: Case Details
+        const illusionCaseStudies = [
+            "Flawless prose creates a false signal. It deceives teachers and grading rubrics alike into certifying conceptual understanding that was never assembled in the student's brain.",
+            "Federal data shows schools scrambling: 60% use AI, but only 31% have defined rules. This policy vacuum leads to uncalibrated adoption where students default to bypassing cognitive work.",
+            "Detection is an arms race; integration is often superficial. Neither answers Kapur's matrix of cognitive struggle necessary for long-term neural pathway consolidation."
+        ];
+        function setIllusionDetail(index) {
+            const cards = [
+                document.getElementById('card-illusion-1'),
+                document.getElementById('card-illusion-2'),
+                document.getElementById('card-illusion-3')
+            ];
+            cards.forEach((card, idx) => {
+                if (idx === index - 1) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+            const textPane = document.getElementById('illusion-detail-text');
+            gsap.to(textPane, {opacity: 0, duration: 0.15, onComplete: () => {
+                textPane.textContent = illusionCaseStudies[index - 1];
+                gsap.to(textPane, {opacity: 1, duration: 0.2});
+            }});
+        }
+
+        // Slide 3 Interaction: Epistemic Visualizer
+        const epistemicSchematics = [
+            {
+                title: "Process: Symbolic Production",
+                steps: [
+                    { num: "Step 1", text: "<strong>Conceptual Schema</strong> in long term memory triggers search and retrieval." },
+                    { num: "Step 2", text: "<strong>Active Assembly</strong>: Wresting with grammar, syntax, and outline structures." },
+                    { num: "Step 3", text: "<strong>Externalized Artifact</strong>: Draft reflects deep structural understanding." }
+                ],
+                styleClass: "highlight"
+            },
+            {
+                title: "Process: Symbolic Environment",
+                steps: [
+                    { num: "Factor 1", text: "<strong>External Prompts</strong>: Interaction with databases, books, and classmates." },
+                    { num: "Factor 2", text: "<strong>AI Text Inputs</strong>: Infinite generative drafts flood the environment." },
+                    { num: "Factor 3", text: "<strong>Ecology Shift</strong>: Media tools rewrite what counts as normal authorship." }
+                ],
+                styleClass: "highlight-cyan"
+            },
+            {
+                title: "Process: Cognitive Bypass",
+                steps: [
+                    { num: "AI Step 1", text: "<strong>Prompt Delivery</strong>: Minimal conceptual query inputted into LLM." },
+                    { num: "Bypassed", text: "❌ <strong>No Internal Synthesis</strong>: Schema retrieval and mental assembly are skipped." },
+                    { num: "Result", text: "<strong>Synthetic Output</strong>: Flawless prose generated without cognitive footprint." }
+                ],
+                styleClass: "highlight-rose"
+            }
+        ];
+        function setEpistemicVis(index) {
+            const tabs = document.querySelectorAll('#slide-2 .dim-tab');
+            tabs.forEach((tab, idx) => {
+                if (idx === index - 1) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            const visualizer = document.querySelector('.epistemic-visualizer');
+            const data = epistemicSchematics[index - 1];
+
+            gsap.to(visualizer, { opacity: 0, scale: 0.98, duration: 0.15, onComplete: () => {
+                document.getElementById('vis-title').textContent = data.title;
+                const container = document.getElementById('vis-container');
+                container.innerHTML = "";
+                
+                data.steps.forEach(step => {
+                    const row = document.createElement('div');
+                    row.className = `vis-row ${data.styleClass}`;
+                    row.innerHTML = `
+                        <span class="vis-label">${step.num}</span>
+                        <div class="vis-flow">${step.text}</div>
+                    `;
+                    container.appendChild(row);
+                });
+                
+                gsap.to(visualizer, { opacity: 1, scale: 1, duration: 0.25 });
+            }});
+        }
+
+        // Slide 4 Interaction: Timeline Stage
+        function setTimelineStage(index, isRupture) {
+            const steps = document.querySelectorAll('.timeline-step');
+            steps.forEach((step, idx) => {
+                if (idx < index) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+            steps[index-1].classList.add('active');
+
+            const title = document.getElementById('timeline-stage-title');
+            const desc = document.getElementById('timeline-stage-desc');
+            const pane = document.getElementById('timeline-details-pane');
+
+            const stage = timelineStages[index - 1];
+
+            gsap.to(pane, { opacity: 0, x: -10, duration: 0.15, onComplete: () => {
+                title.textContent = stage.title;
+                desc.textContent = stage.desc;
+                if (stage.rupture) {
+                    pane.classList.add('rupture');
+                    title.style.color = 'var(--accent-rose)';
+                } else {
+                    pane.classList.remove('rupture');
+                    title.style.color = 'var(--accent)';
+                }
+                gsap.to(pane, { opacity: 1, x: 0, duration: 0.25 });
+            }});
+        }
+
+        // Slide 5 Interaction: Anatomy Tabs
+        const anatomyDetails = [
+            {
+                title: "Noetic Displacement",
+                subtitle: "Anatomy Component 1",
+                desc: "Cognitive operations are externalized. Generative models construct syntax and formulate semantic connections that previously required human internal thought.",
+                intervention: "<strong>Key Intervention:</strong> Require initial brainstorms and logical mappings to be generated internal to the student before using any automated layout aids."
+            },
+            {
+                title: "Rhetorical Saturation",
+                subtitle: "Anatomy Component 2",
+                desc: "Communication environments are flooded with structurally correct, synthetic prose. The unique signature of personal human voice is abstracted away.",
+                intervention: "<strong>Key Intervention:</strong> Shift rubrics from assessing mere grammatical structure to looking for local situated knowledge, distinct style, and voice complexity."
+            },
+            {
+                title: "Existential Abstraction",
+                subtitle: "Anatomy Component 3",
+                desc: "Writing and symbol production are decoupled from personal commitment, intellectual accountability, and the lived experience of navigation.",
+                intervention: "<strong>Key Intervention:</strong> Integrate live dialogic defenses of essays, where students verbalize their research pathways and explain drafting decisions."
+            },
+            {
+                title: "Infrastructural Consolidation",
+                subtitle: "Anatomy Component 4",
+                desc: "Schools rely on distal commercial platforms whose hidden, automated rules and continuous updates govern what counts as 'proper' composition.",
+                intervention: "<strong>Key Intervention:</strong> Preserve locally controlled open source tools and physical handwriting frameworks to keep corporate formatting engines from defining learning benchmarks."
+            }
+        ];
+        function setAnatomyPane(index) {
+            const btns = document.querySelectorAll('.anatomy-card-btn');
+            btns.forEach((btn, idx) => {
+                if (idx === index - 1) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            const pane = document.getElementById('anatomy-detail-pane');
+            const data = anatomyDetails[index - 1];
+
+            gsap.to(pane, { opacity: 0, y: 10, duration: 0.15, onComplete: () => {
+                document.getElementById('anatomy-subtitle').textContent = data.subtitle;
+                document.getElementById('anatomy-title').textContent = data.title;
+                document.getElementById('anatomy-desc').textContent = data.desc;
+                document.getElementById('anatomy-intervention').innerHTML = data.intervention;
+                gsap.to(pane, { opacity: 1, y: 0, duration: 0.25 });
+            }});
+        }
+
+        // Slide 6 Interaction: Matrix Cells
+        function setMatrixCell(index, name, description) {
+            const cells = document.querySelectorAll('.matrix-cell');
+            cells.forEach((cell, idx) => {
+                if (idx === index - 1) {
+                    cell.classList.add('active');
+                } else {
+                    cell.classList.remove('active');
+                }
+            });
+
+            const title = document.getElementById('matrix-detail-title');
+            const desc = document.getElementById('matrix-detail-desc');
+            const card = document.getElementById('matrix-detail-card');
+
+            gsap.to(card, { opacity: 0, x: 15, duration: 0.15, onComplete: () => {
+                title.textContent = name;
+                desc.textContent = description;
+                if (name === "Unproductive Success") {
+                    title.style.color = "var(--accent-rose)";
+                    card.style.borderColor = "rgba(244, 63, 94, 0.25)";
+                } else if (name === "Productive Success") {
+                    title.style.color = "var(--accent-green)";
+                    card.style.borderColor = "rgba(52, 211, 153, 0.25)";
+                } else if (name === "Productive Failure") {
+                    title.style.color = "rgba(52, 211, 153, 0.85)";
+                    card.style.borderColor = "rgba(52, 211, 153, 0.15)";
+                } else if (name === "Unproductive Failure") {
+                    title.style.color = "var(--accent-yellow)";
+                    card.style.borderColor = "rgba(245, 208, 0, 0.2)";
+                } else {
+                    title.style.color = "var(--accent)";
+                    card.style.borderColor = "var(--rule)";
+                }
+                gsap.to(card, { opacity: 1, x: 0, duration: 0.25 });
+            }});
+        }
+
+        // Slide 7 Interaction: Assumptions Toggle
+        function toggleAssumption(cardElement) {
+            cardElement.classList.toggle('revealed');
+        }
+
+        // Slide 8 Interaction: Friction Slider Sandbox
+        const sliderFrictionLevels = [
+            {
+                badge: "0% - Frictionless AI",
+                title: "Cognitive Bypass & Outsourcing",
+                desc: "Frictionless level. Students outsource draft generation, editing, and revision entirely to the engine. Yields Unproductive Success: flawless final products with zero mental recall or retention.",
+                styleClass: "bypass"
+            },
+            {
+                badge: "50% - Calibrated Friction",
+                title: "Calibrated Desirable Difficulties",
+                desc: "Optimal level. Scaffolds cognitive challenge, preserving schema construction while leveraging AI as a critical dialogue partner rather than an outsourcing agent.",
+                styleClass: "productive"
+            },
+            {
+                badge: "100% - Exclusionary Friction",
+                title: "Frustration & Mechanical Blockades",
+                desc: "Exclusionary level. Completely locks out assistive tools. Rather than challenging the cognitive process, it introduces mechanical obstacles that penalize neurodivergent and English language learners.",
+                styleClass: "exclusionary"
+            }
+        ];
+        function onFrictionSliderChange(val) {
+            const data = sliderFrictionLevels[val];
+            const card = document.getElementById('slider-output-card');
+            
+            gsap.to(card, {opacity: 0, scale: 0.98, duration: 0.15, onComplete: () => {
+                card.className = `slider-output-card ${data.styleClass}`;
+                document.getElementById('slider-output-badge').textContent = data.badge;
+                document.getElementById('slider-output-title').textContent = data.title;
+                document.getElementById('slider-output-desc').textContent = data.desc;
+                
+                gsap.to(card, {opacity: 1, scale: 1, duration: 0.2});
+            }});
+        }
+
+        // Slide 9 Interaction: Dimensions
+        function setDimensionTab(index) {
+            const tabs = document.querySelectorAll('#slide-8 .dim-tab');
+            tabs.forEach((tab, idx) => {
+                if (idx === index - 1) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            const title = document.getElementById('dim-detail-title');
+            const desc = document.getElementById('dim-detail-desc');
+            const quote = document.getElementById('dim-detail-quote');
+            const pane = document.getElementById('dim-detail-pane');
+
+            const dim = dimensions[index - 1];
+
+            gsap.to(pane, { opacity: 0, y: 10, duration: 0.15, onComplete: () => {
+                title.textContent = dim.title;
+                title.style.color = dim.color;
+                desc.textContent = dim.desc;
+                quote.textContent = `"${dim.quote}"`;
+                quote.style.borderLeftColor = dim.color;
+                gsap.to(pane, { opacity: 1, y: 0, duration: 0.25 });
+            }});
+        }
+
+        // Slide 10 Interaction: Prompt Sandbox Toggle
+        function toggleSandbox(mode) {
+            const flessBtn = document.querySelector('.toggle-btn.frictionless');
+            const infusedBtn = document.querySelector('.toggle-btn.friction-infused');
+            const flessCard = document.getElementById('fless-card');
+            const infusedCard = document.getElementById('infused-card');
+
+            if (mode === 'frictionless') {
+                flessBtn.classList.add('active');
+                infusedBtn.classList.remove('active');
+                
+                flessCard.classList.add('active');
+                infusedCard.classList.remove('active');
+                
+                gsap.to(flessCard, { scale: 1, opacity: 1, duration: 0.3 });
+                gsap.to(infusedCard, { scale: 0.95, opacity: 0.5, duration: 0.3 });
+            } else {
+                infusedBtn.classList.add('active');
+                flessBtn.classList.remove('active');
+                
+                infusedCard.classList.add('active');
+                flessCard.classList.remove('active');
+                
+                gsap.to(infusedCard, { scale: 1, opacity: 1, duration: 0.3 });
+                gsap.to(flessCard, { scale: 0.95, opacity: 0.5, duration: 0.3 });
+            }
+        }
+
+        // Slide 11 Interaction: Scaffolding Explorer
+        const scaffoldingProfiles = [
+            {
+                title: "English Language Learner",
+                desc: "<strong>Friction Calibration:</strong> Minimize mechanical language barriers (exclusionary friction) by allowing AI translation or dictionary extensions. However, preserve the core conceptual friction: requires organizing arguments and syntheses internally.",
+                color: "var(--accent-green)"
+            },
+            {
+                title: "Dysgraphia / Learning Disability",
+                desc: "<strong>Friction Calibration:</strong> Reduce transcription friction. Allow speech-to-text inputs and outline formatting engines to avoid physical motor exhaustion. Keep noetic friction high: students must outline arguments orally or critique AI outline arguments.",
+                color: "var(--accent-green)"
+            },
+            {
+                title: "Advanced Researcher",
+                desc: "<strong>Friction Calibration:</strong> Maximize complexity. Require students to critique LLM outputs, spot subtle prompt-induced hallucinations, and explain historical counter-narratives that default AI datasets miss.",
+                color: "var(--accent)"
+            }
+        ];
+        function setScaffoldingProfile(index) {
+            const btns = document.querySelectorAll('.scaffolding-card-btn');
+            const data = scaffoldingProfiles[index - 1];
+            btns.forEach((btn, idx) => {
+                const heading = btn.querySelector('h4');
+                const badge = btn.querySelector('span');
+                if (idx === index - 1) {
+                    btn.classList.add('active');
+                    btn.style.borderColor = data.color;
+                    if (heading) heading.style.color = data.color;
+                    if (badge) badge.style.color = data.color;
+                } else {
+                    btn.classList.remove('active');
+                    btn.style.borderColor = "";
+                    if (heading) heading.style.color = "";
+                    if (badge) badge.style.color = "";
+                }
+            });
+
+            const pane = document.getElementById('scaffolding-detail-pane');
+
+            gsap.to(pane, { opacity: 0, x: 15, duration: 0.15, onComplete: () => {
+                document.getElementById('scaffold-title').textContent = data.title;
+                document.getElementById('scaffold-title').style.color = data.color;
+                document.getElementById('scaffold-desc').innerHTML = data.desc;
+                
+                gsap.to(pane, { opacity: 1, x: 0, duration: 0.25 });
+            }});
+        }
+
+        // Slide 12 Interaction: Seminar Q&A generator
+        const seminarQuestions = [
+            "How can we measure learning in an environment where output is no longer a reliable proxy?",
+            "Where does the line sit between exclusionary friction and productive struggle in your own school?",
+            "If writing is epistemic, what new symbolic environments can we create that protect human voice?",
+            "How do we prepare teachers to grade the process of learning rather than simply validating the final draft?"
+        ];
+        let currentQuestionIdx = 0;
+        function generateSeminarPrompt() {
+            currentQuestionIdx = (currentQuestionIdx + 1) % seminarQuestions.length;
+            const text = document.getElementById('seminar-question');
+            
+            gsap.to(text, {opacity:0, scale: 0.98, duration: 0.15, onComplete: () => {
+                text.textContent = `"${seminarQuestions[currentQuestionIdx]}"`;
+                gsap.to(text, {opacity: 1, scale: 1, duration: 0.2});
+            }});
+        }
+
+        // Navigation
+        function updateProgress() {
+            const progress = (currentSlide / (totalSlides - 1)) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('current-slide-num').textContent = currentSlide + 1;
+            document.getElementById('total-slide-num').textContent = totalSlides;
+
+            // Shift ambient orbs on slide change
+            const orb1 = document.getElementById('orb-1');
+            const orb2 = document.getElementById('orb-2');
+            
+            orb1.style.transform = `translate(${currentSlide * 12}px, ${currentSlide * -6}px)`;
+            orb2.style.transform = `translate(${currentSlide * -12}px, ${currentSlide * 6}px)`;
+
+            // Update footer logo visibility based on slide type (matching Image 2 watermark rules)
+            const aiedFooter = document.getElementById('aied-footer-logo');
+            const activeSlideElement = document.getElementById(`slide-${currentSlide}`);
+            
+            if (activeSlideElement.classList.contains('title-slide')) {
+                // Title slide or ending slide: hide the bottom-right mini-logo because it has a large watermark
+                gsap.to(aiedFooter, { opacity: 0, duration: 0.3 });
+            } else {
+                // Content slide: show bottom-right mini-logo
+                gsap.to(aiedFooter, { opacity: 1, duration: 0.3 });
+            }
+
+            // Close abstract overlay if moving away from slide 1
+            if (currentSlide !== 0) {
+                document.getElementById('abstract-overlay').classList.remove('open');
+            }
+
+            // Update drawer items active status
+            const drawerItems = document.querySelectorAll('.drawer-item');
+            drawerItems.forEach((item, idx) => {
+                if (idx === currentSlide) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        function showSlide(index) {
+            const activeSlide = document.querySelector('.slide.active');
+            const targetSlide = document.getElementById(`slide-${index}`);
+
+            if (activeSlide === targetSlide) return;
+
+            // Animate out active
+            if (activeSlide) {
+                gsap.to(activeSlide, { 
+                    opacity: 0, 
+                    y: -10, 
+                    scale: 0.98,
+                    duration: 0.35, 
+                    ease: 'power2.inOut',
+                    onComplete: () => {
+                        activeSlide.classList.remove('active');
+                    }
+                });
+            }
+
+            // Animate in target
+            targetSlide.classList.add('active');
+            gsap.fromTo(targetSlide, 
+                { opacity: 0, y: 10, scale: 0.98 },
+                { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power2.out', delay: 0.08 }
+            );
+
+            currentSlide = index;
+            updateProgress();
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        function jumpToSlide(index) {
+            showSlide(index);
+            toggleDrawer();
+        }
+
+        // Navigation Drawer
+        function toggleDrawer() {
+            const drawer = document.getElementById('nav-drawer');
+            const overlay = document.getElementById('drawer-overlay');
+            drawer.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        // Key Listeners
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'ArrowRight' || e.code === 'Space') {
+                nextSlide();
+            } else if (e.code === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Swipe Controls for Mobile Devices
+        let touchstartX = 0;
+        let touchendX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleGesture();
+        });
+
+        function handleGesture() {
+            if (touchendX < touchstartX - 50) {
+                nextSlide();
+            }
+            if (touchendX > touchstartX + 50) {
+                prevSlide();
+            }
+        }
+
+        // Init progress bar
+        updateProgress();
+    </script>
+</body>
+</html>
