@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teaching Social Studies in the Age of AI</title>
+  <style>
+    :root {
+      --ink: #17212b;
+      --muted: #526170;
+      --paper: #f7f3ea;
+      --panel: #ffffff;
+      --rule: #d8d0c0;
+      --blue: #174a7c;
+      --green: #496f5d;
+      --red: #9b3d35;
+      --gold: #c4872b;
+      --shadow: 0 18px 60px rgba(23, 33, 43, 0.16);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--ink);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      overflow: hidden;
+    }
+
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background:
+        linear-gradient(90deg, rgba(23, 74, 124, 0.1), transparent 45%),
+        var(--paper);
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      padding: clamp(34px, 5vw, 72px);
+      overflow: hidden;
+    }
+
+    .slide.active {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 28px;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      border: 1px solid rgba(23, 33, 43, 0.16);
+      pointer-events: none;
+    }
+
+    .kicker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--blue);
+      font-size: clamp(0.72rem, 1vw, 0.9rem);
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 32px;
+      height: 3px;
+      background: var(--gold);
+      display: inline-block;
+    }
+
+    h1, h2 {
+      margin: 0;
+      line-height: 0.98;
+      letter-spacing: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    h1 { font-size: clamp(3.2rem, 8vw, 7.2rem); max-width: 980px; }
+    h2 { font-size: clamp(2.6rem, 6.2vw, 5.7rem); max-width: 1080px; }
+
+    p {
+      margin: 0;
+      font-size: clamp(1.25rem, 2vw, 1.9rem);
+      line-height: 1.32;
+      color: var(--muted);
+      max-width: 1000px;
+    }
+
+    .lead {
+      font-size: clamp(1.55rem, 2.65vw, 2.45rem);
+      color: var(--ink);
+      max-width: 1030px;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      align-content: center;
+      gap: 28px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      padding: clamp(20px, 3vw, 34px);
+      box-shadow: var(--shadow);
+    }
+
+    .panel h3 {
+      margin: 0 0 14px;
+      color: var(--ink);
+      font-size: clamp(1.35rem, 2.1vw, 2rem);
+      line-height: 1.1;
+    }
+
+    .panel p, .panel li {
+      font-size: clamp(1.05rem, 1.55vw, 1.45rem);
+      line-height: 1.28;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.25em;
+      display: grid;
+      gap: 14px;
+    }
+
+    .claim {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 4.2vw, 4.3rem);
+      line-height: 1.04;
+      color: var(--ink);
+      max-width: 1100px;
+    }
+
+    .artifact-process {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .arrow {
+      color: var(--red);
+      font-size: clamp(2rem, 4vw, 4rem);
+      font-weight: 700;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .badge {
+      border: 1px solid rgba(23, 33, 43, 0.28);
+      border-radius: 999px;
+      padding: 10px 15px;
+      background: rgba(255, 255, 255, 0.7);
+      font-size: clamp(0.95rem, 1.3vw, 1.18rem);
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .step {
+      min-height: 220px;
+      display: grid;
+      align-content: start;
+      gap: 18px;
+      border-top: 8px solid var(--blue);
+    }
+
+    .step:nth-child(2) { border-top-color: var(--green); }
+    .step:nth-child(3) { border-top-color: var(--gold); }
+    .step:nth-child(4) { border-top-color: var(--red); }
+
+    .step .icon {
+      font-size: clamp(2.2rem, 4vw, 4.4rem);
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .matrix .panel {
+      min-height: 185px;
+      box-shadow: none;
+    }
+
+    .question {
+      padding: 22px 26px;
+      border-left: 8px solid var(--gold);
+      background: rgba(255, 255, 255, 0.72);
+      font-size: clamp(1.35rem, 2.2vw, 2.1rem);
+      line-height: 1.2;
+      color: var(--ink);
+      font-weight: 750;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 16px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 22px;
+      align-items: start;
+      padding: 18px 0;
+      border-top: 1px solid var(--rule);
+    }
+
+    .timeline-item strong {
+      color: var(--blue);
+      font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+    }
+
+    .timeline-item span {
+      font-size: clamp(1.15rem, 1.7vw, 1.55rem);
+      color: var(--ink);
+      line-height: 1.25;
+    }
+
+    .footer {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .controls {
+      position: fixed;
+      z-index: 10;
+      right: 22px;
+      bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      padding: 8px 10px;
+      box-shadow: var(--shadow);
+    }
+
+    button {
+      border: 0;
+      background: var(--ink);
+      color: white;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    button:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    .counter {
+      min-width: 74px;
+      text-align: center;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .speaker-notes {
+      display: none;
+    }
+
+    .deck-switch {
+      position: fixed;
+      z-index: 10;
+      top: 18px;
+      right: 22px;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.82);
+      color: var(--ink);
+      font-size: 0.86rem;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+
+    .deck-switch:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 800px) {
+      body { overflow: auto; }
+      .deck { height: 100svh; }
+      .two-col, .artifact-process, .flow, .matrix { grid-template-columns: 1fr; }
+      .arrow { display: none; }
+      .slide { padding: 30px; }
+      .slide::before { inset: 12px; }
+      .timeline-item { grid-template-columns: 1fr; gap: 6px; }
+      .controls { right: 12px; bottom: 12px; }
+    }
+
+    @media print {
+      @page { size: landscape; margin: 0; }
+      html, body {
+        background: var(--paper) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        overflow: visible !important;
+        height: auto !important;
+      }
+      .deck { height: auto !important; background: var(--paper) !important; }
+      .slide {
+        position: relative !important;
+        display: grid !important;
+        page-break-after: always;
+        break-after: page;
+        width: 100vw !important;
+        height: 100vh !important;
+        opacity: 1 !important;
+      }
+      .controls, .speaker-notes, .deck-switch { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="deck-switch" href="../">Root deck</a>
+  <main class="deck" aria-live="polite">
+    <section class="slide active" data-title="Title">
+      <div class="kicker">50-minute virtual presentation</div>
+      <div class="content">
+        <h1>Teaching Social Studies in the Age of AI</h1>
+        <p class="lead">Preserving inquiry, agency, and democratic learning when machines can produce the answer.</p>
+        <div class="badge-row">
+          <span class="badge">Micah Miner</span>
+          <span class="badge">C.O.R.E. / H.E.A.R.T.</span>
+          <span class="badge">Pedagogical friction</span>
+        </div>
+      </div>
+      <div class="footer"><span>National Louis University / virtual session</span><span>1</span></div>
+      <aside class="speaker-notes">
+        Open by naming the tension in plain language: social studies has always taught students to interpret sources, hold competing claims, and develop civic judgment. Generative AI can help that work, but it can also replace the work students needed to do to become citizens capable of judgment.
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Student Problem">
+      <div class="kicker">Start with the classroom</div>
+      <div class="content">
+        <h2>Two students turn in the same polished historical argument.</h2>
+        <div class="two-col">
+          <div class="panel">
+            <h3>Student A used AI to enter the work.</h3>
+            <p>They tested claims, compared sources, revised language, and defended decisions.</p>
+          </div>
+          <div class="panel">
+            <h3>Student B used AI to exit the work.</h3>
+            <p>They accepted a fluent answer without doing the inquiry the task was built to develop.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer"><span>Same artifact. Different learning.</span><span>2</span></div>
+      <aside class="speaker-notes">
+        This frames the whole session: the product alone cannot tell us whether learning happened. In social studies, the process matters because the task is often designed to build sourcing, contextualization, deliberation, empathy, evidence use, and civic agency.
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Thesis">
+      <div class="kicker">Core claim</div>
+      <div class="content">
+        <p class="claim">AI supports learning when it helps students enter, sustain, or deepen the work of thinking.</p>
+        <p class="claim" style="color: var(--red);">It bypasses learning when it replaces the thinking the task was designed to develop.</p>
+      </div>
+      <div class="footer"><span>From tool question to learning question</span><span>3</span></div>
+      <aside class="speaker-notes">
+        Name the productive and risky sides together. This is not a ban-AI talk or an AI hype talk. It is a design talk: what kind of human work does this assignment require, and what role should AI play around that work?
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Why Social Studies">
+      <div class="kicker">Why this matters here</div>
+      <div class="content">
+        <h2>Social studies is not just content delivery.</h2>
+        <div class="flow">
+          <div class="panel step"><div class="icon">1</div><h3>Read sources</h3><p>Who made this, why, and for whom?</p></div>
+          <div class="panel step"><div class="icon">2</div><h3>Hold complexity</h3><p>What changes when another perspective enters?</p></div>
+          <div class="panel step"><div class="icon">3</div><h3>Make claims</h3><p>What does the evidence actually support?</p></div>
+          <div class="panel step"><div class="icon">4</div><h3>Act civically</h3><p>What responsibility follows from understanding?</p></div>
+        </div>
+      </div>
+      <div class="footer"><span>Historical thinking is a civic apprenticeship.</span><span>4</span></div>
+      <aside class="speaker-notes">
+        Ground this in your background as a social studies educator and technology leader. Social studies develops habits of inquiry and participation. The AI question is not only, "Can students get an answer?" It is, "Are students still practicing the habits that democratic life requires?"
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Debate Too Small">
+      <div class="kicker">The debate is too small</div>
+      <div class="content">
+        <h2>We keep asking whether AI is cheating.</h2>
+        <p class="lead">The deeper question is what happens when AI can produce the work students used to do in order to learn.</p>
+        <div class="badge-row">
+          <span class="badge">Integrity</span>
+          <span class="badge">Assessment</span>
+          <span class="badge">Cognition</span>
+          <span class="badge">Agency</span>
+          <span class="badge">Democracy</span>
+        </div>
+      </div>
+      <div class="footer"><span>Academic integrity is real. It is not the whole story.</span><span>5</span></div>
+      <aside class="speaker-notes">
+        This connects to the doctoral colloquium argument while making it social-studies-specific. Cheating is an institutional concern. Learning is the educational concern. Civic agency is the social studies concern.
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Frictionless Learning">
+      <div class="kicker">The paradox</div>
+      <div class="content">
+        <h2>Frictionless learning can become frictionless non-learning.</h2>
+        <div class="artifact-process">
+          <div class="panel">
+            <h3>AI makes the artifact easier.</h3>
+            <p>Summaries, arguments, counterclaims, examples, and lesson products appear quickly.</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="panel">
+            <h3>But learning needs process.</h3>
+            <p>Confusion, dialogue, revision, source conflict, and ownership build durable understanding.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer"><span>Artifact vs. process</span><span>6</span></div>
+      <aside class="speaker-notes">
+        Use the Drive article's argument: generative AI promises efficiency and personalization, but can undermine deliberate cognitive and social struggle. The goal is not to make learning artificially hard. The goal is to preserve the parts of difficulty that produce understanding.
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Theory Plain Language">
+      <div class="kicker">Theory in plain language</div>
+      <div class="content">
+        <h2>Four older ideas still help us see the AI problem.</h2>
+        <div class="matrix">
+          <div class="panel"><h3>Dewey</h3><p>Students learn through meaningful experience, not passive receipt.</p></div>
+          <div class="panel"><h3>Vygotsky</h3><p>Thinking grows through social mediation and guided stretch.</p></div>
+          <div class="panel"><h3>Piaget</h3><p>Disequilibrium changes schemas; easy clarity can block growth.</p></div>
+          <div class="panel"><h3>Freire</h3><p>Education should create agency, not compliance with delivered answers.</p></div>
+        </div>
+      </div>
+      <div class="footer"><span>Constructivism becomes urgent again.</span><span>7</span></div>
+      <aside class="speaker-notes">
+        Keep this short in the virtual talk. The audience does not need a literature lecture; they need a usable lens. These theories converge around active meaning-making, social interaction, struggle, and agency.
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Media Ecology">
+      <div class="kicker">Media ecology</div>
+      <div class="content">
+        <h2>AI is not just another resource students consult.</h2>
+        <p class="lead">It is a medium that can reorganize how students encounter knowledge, authority, evidence, and voice.</p>
+        <div class="timeline">
+          <div class="timeline-item"><strong>Search</strong><span>Students choose among sources.</span></div>
+          <div class="timeline-item"><strong>Feeds</strong><span>Platforms curate what becomes visible.</span></div>
+          <div class="timeline-item"><strong>Generative AI</strong><span>Systems curate and create the symbolic material itself.</span></div>
+        </div>
+      </div>
+      <div class="footer"><span>The medium shapes the work.</span><span>8</span></div>
+      <aside class="speaker-notes">
+        Connect McLuhan and Ong without crowding the slide. In social studies, the way information arrives matters. A student does different cognitive work when wrestling with primary sources than when receiving a plausible synthetic summary.
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Risks">
+      <div class="kicker">Three social studies risks</div>
+      <div class="content">
+        <div class="flow">
+          <div class="panel step"><div class="icon">!</div><h3>Misinformation</h3><p>Fluent output can hide weak sourcing or false claims.</p></div>
+          <div class="panel step"><div class="icon">≠</div><h3>Bias</h3><p>Models may flatten cultural complexity or reproduce dominant narratives.</p></div>
+          <div class="panel step"><div class="icon">?</div><h3>Agency</h3><p>Students can outsource uncertainty instead of learning to judge it.</p></div>
+          <div class="panel step"><div class="icon">∞</div><h3>Scale</h3><p>Weak interpretations can circulate faster than classroom correction.</p></div>
+        </div>
+      </div>
+      <div class="footer"><span>Fast answers need slower judgment.</span><span>9</span></div>
+      <aside class="speaker-notes">
+        Pull from the Drive article: misinformation/disinformation, algorithmic bias, and eroded agency are not side issues; they strike at social studies' civic mission. Mention DiResta, Buolamwini, Berson and Berson, Krutka/Heath/Mason as notes, not slide clutter.
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Pedagogical Friction">
+      <div class="kicker">Design principle</div>
+      <div class="content">
+        <h2>Pedagogical friction is useful difficulty by design.</h2>
+        <p class="lead">It protects the thinking, explaining, revising, and meaning-making that learning requires.</p>
+        <div class="badge-row">
+          <span class="badge">Not busywork</span>
+          <span class="badge">Not exclusion</span>
+          <span class="badge">Not anti-AI</span>
+          <span class="badge">A learning safeguard</span>
+        </div>
+      </div>
+      <div class="footer"><span>Reduce barriers. Protect thinking.</span><span>10</span></div>
+      <aside class="speaker-notes">
+        Define pedagogical friction clearly. Distinguish productive friction from needless difficulty. This is an accessibility point: remove barriers that prevent participation while preserving the cognitive work that develops understanding.
+      </aside>
+    </section>
+
+    <section class="slide" data-title="CORE HEART">
+      <div class="kicker">A social studies decision frame</div>
+      <div class="content">
+        <h2>C.O.R.E. and H.E.A.R.T. move AI use from permission to judgment.</h2>
+        <div class="two-col">
+          <div class="panel">
+            <h3>C.O.R.E.</h3>
+            <p>Critical Thinking<br>Openness<br>Respect<br>Engagement</p>
+          </div>
+          <div class="panel">
+            <h3>H.E.A.R.T.</h3>
+            <p>Honesty<br>Empathy<br>Accountability<br>Responsibility<br>Thoughtfulness</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer"><span>Values become design moves.</span><span>11</span></div>
+      <aside class="speaker-notes">
+        Use these as practical educator language. C.O.R.E. supports inquiry and discourse; H.E.A.R.T. supports ethical participation. The frameworks help teachers ask not just "is AI allowed?" but "what kind of person, learner, and citizen is this use cultivating?"
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Decision Tool">
+      <div class="kicker">Use decision tool</div>
+      <div class="content">
+        <h2>Ask four questions before using AI in a social studies task.</h2>
+        <div class="matrix">
+          <div class="question">What thinking is this task meant to develop?</div>
+          <div class="question">What barrier could AI responsibly reduce?</div>
+          <div class="question">What cognitive or civic work must stay human?</div>
+          <div class="question">How will students explain, verify, and own the result?</div>
+        </div>
+      </div>
+      <div class="footer"><span>A practical pause point</span><span>12</span></div>
+      <aside class="speaker-notes">
+        This is the central tool for the virtual session. Participants can use it immediately for DBQs, historical writing, civic simulations, debate prep, source analysis, and media literacy lessons.
+      </aside>
+    </section>
+
+    <section class="slide" data-title="AI Can Help">
+      <div class="kicker">When AI helps</div>
+      <div class="content">
+        <h2>Use AI around the inquiry, not instead of the inquiry.</h2>
+        <div class="flow">
+          <div class="panel step"><div class="icon">A</div><h3>Access</h3><p>Vocabulary support, reading-level bridges, translation drafts.</p></div>
+          <div class="panel step"><div class="icon">B</div><h3>Practice</h3><p>Low-stakes questioning, claim testing, counterexample generation.</p></div>
+          <div class="panel step"><div class="icon">C</div><h3>Feedback</h3><p>Ask for missing evidence, unclear reasoning, or alternative interpretations.</p></div>
+          <div class="panel step"><div class="icon">D</div><h3>Reflection</h3><p>Compare AI output with student judgment and source evidence.</p></div>
+        </div>
+      </div>
+      <div class="footer"><span>Scaffold without surrendering the task.</span><span>13</span></div>
+      <aside class="speaker-notes">
+        Make this balanced. AI can support inclusion and access when it lowers barriers to participation. But the teacher must define what cannot be outsourced: sourcing, evidence judgment, perspective-taking, and civic reasoning.
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Assignment Redesign">
+      <div class="kicker">Example redesign</div>
+      <div class="content">
+        <h2>Instead of “write the argument,” redesign the process.</h2>
+        <div class="timeline">
+          <div class="timeline-item"><strong>Before AI</strong><span>Students annotate two primary sources and write a claim from evidence.</span></div>
+          <div class="timeline-item"><strong>With AI</strong><span>Students ask AI for a rival interpretation, then test it against the sources.</span></div>
+          <div class="timeline-item"><strong>After AI</strong><span>Students explain which interpretation is stronger, what AI missed, and what they changed.</span></div>
+        </div>
+      </div>
+      <div class="footer"><span>The artifact improves because the thinking deepens.</span><span>14</span></div>
+      <aside class="speaker-notes">
+        This is a concrete social studies example. The point is not to hide AI from the task but to situate it as a challenge, critic, or contrast case. The student still has to read, judge, and explain.
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Virtual Activity">
+      <div class="kicker">Participant activity</div>
+      <div class="content">
+        <h2>Redesign one task in 8 minutes.</h2>
+        <div class="two-col">
+          <div class="panel">
+            <h3>Choose a task</h3>
+            <p>DBQ, current event analysis, historical essay, civic debate, media literacy check, or project reflection.</p>
+          </div>
+          <div class="panel">
+            <h3>Add one pause point</h3>
+            <p>Students must verify, compare, explain, revise, or defend before the artifact is complete.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer"><span>Make the tool useful before making it scalable.</span><span>15</span></div>
+      <aside class="speaker-notes">
+        For a virtual session, use chat or breakout rooms. Ask participants to post: task, AI role, protected thinking, evidence of ownership. Keep the share-out focused on design decisions, not tool demonstrations.
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Policy">
+      <div class="kicker">From classroom to system</div>
+      <div class="content">
+        <h2>Policies should protect learning, not only police tools.</h2>
+        <div class="flow">
+          <div class="panel step"><div class="icon">1</div><h3>Learning</h3><p>Name the human work students must practice.</p></div>
+          <div class="panel step"><div class="icon">2</div><h3>Privacy</h3><p>Limit data exposure and avoid sensitive student inputs.</p></div>
+          <div class="panel step"><div class="icon">3</div><h3>Equity</h3><p>Ensure AI support does not become lower expectations.</p></div>
+          <div class="panel step"><div class="icon">4</div><h3>Transparency</h3><p>Require disclosure, reflection, and teacher-visible process.</p></div>
+        </div>
+      </div>
+      <div class="footer"><span>Governance is instructional design at scale.</span><span>16</span></div>
+      <aside class="speaker-notes">
+        Connect district leadership to classroom practice. Policies that focus only on detection miss the pedagogical issue. The better policy question is: how do we protect privacy, equity, and the conditions for human learning?
+      </aside>
+    </section>
+
+    <section class="slide" data-title="50 Minute Run">
+      <div class="kicker">Facilitation plan</div>
+      <div class="content">
+        <h2>A 50-minute virtual arc</h2>
+        <div class="timeline">
+          <div class="timeline-item"><strong>0-8 min</strong><span>Two-student scenario and core thesis.</span></div>
+          <div class="timeline-item"><strong>8-18 min</strong><span>Why social studies and AI friction matter.</span></div>
+          <div class="timeline-item"><strong>18-30 min</strong><span>Theory, risks, C.O.R.E. / H.E.A.R.T.</span></div>
+          <div class="timeline-item"><strong>30-42 min</strong><span>Assignment redesign activity and share-out.</span></div>
+          <div class="timeline-item"><strong>42-50 min</strong><span>Policy implications, closing claim, discussion.</span></div>
+        </div>
+      </div>
+      <div class="footer"><span>Virtual-ready pacing</span><span>17</span></div>
+      <aside class="speaker-notes">
+        This slide can be shown briefly or kept as a facilitator anchor. It helps ensure the virtual session has participation and not just delivery.
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Closing">
+      <div class="kicker">Closing claim</div>
+      <div class="content">
+        <h2>In social studies, the goal is not faster answers.</h2>
+        <p class="lead">The goal is students who can investigate, deliberate, judge evidence, and participate responsibly in public life.</p>
+        <p class="claim" style="color: var(--blue);">AI should strengthen that work, not quietly remove it.</p>
+      </div>
+      <div class="footer"><span>Discussion</span><span>18</span></div>
+      <aside class="speaker-notes">
+        End with democratic purpose. Invite discussion around one question: where can AI reduce access barriers without removing the civic and cognitive work social studies is designed to cultivate?
+      </aside>
+    </section>
+  </main>
+
+  <nav class="controls" aria-label="Slide controls">
+    <button type="button" id="prev" aria-label="Previous slide">‹</button>
+    <span class="counter" id="counter">1 / 18</span>
+    <button type="button" id="next" aria-label="Next slide">›</button>
+  </nav>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const counter = document.getElementById("counter");
+    let current = 0;
+
+    function showSlide(index) {
+      current = Math.max(0, Math.min(slides.length - 1, index));
+      slides.forEach((slide, i) => slide.classList.toggle("active", i === current));
+      counter.textContent = `${current + 1} / ${slides.length}`;
+      document.title = `${slides[current].dataset.title} | Teaching Social Studies in the Age of AI`;
+    }
+
+    document.getElementById("prev").addEventListener("click", () => showSlide(current - 1));
+    document.getElementById("next").addEventListener("click", () => showSlide(current + 1));
+
+    document.addEventListener("keydown", (event) => {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        showSlide(current + 1);
+      }
+      if (["ArrowLeft", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        showSlide(current - 1);
+      }
+      if (event.key === "Home") showSlide(0);
+      if (event.key === "End") showSlide(slides.length - 1);
+    });
+
+    showSlide(0);
+  </script>
+</body>
+</html>
