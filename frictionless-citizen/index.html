@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Frictionless Citizen | AAACS Session | Micah J. Miner</title>
+<meta name="description" content="The Frictionless Citizen: Pedagogical Friction, Tertiary Algorithmicity, and the Curricular Stakes of Social Studies in the Age of Generative AI. An AAACS conference session by Micah J. Miner.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E1116;
+    --bg2:#141a24;
+    --panel:#171d27;
+    --ink:#ECE7DA;
+    --muted:#98a2b1;
+    --faint:rgba(236,231,218,0.55);
+    --line:rgba(236,231,218,0.14);
+    --ember:#E2873B;       /* friction / human warmth */
+    --ember-soft:rgba(226,135,59,0.16);
+    --cool:#5BC8D6;        /* algorithmic / frictionless cool */
+    --cool-soft:rgba(91,200,214,0.14);
+    --serif:"Fraunces", Georgia, "Times New Roman", serif;
+    --sans:"Inter", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- Slide system ---------- */
+  .deck{position:fixed;inset:0}
+  .slide{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:clamp(2.2rem,6vw,7rem);
+    opacity:0;visibility:hidden;
+    transform:translateY(14px);
+    transition:opacity .5s ease, transform .5s ease, visibility .5s;
+    overflow:hidden;
+  }
+  .slide.active{opacity:1;visibility:visible;transform:none}
+  .slide-inner{max-width:1120px;width:100%;margin:0 auto}
+
+  /* background texture: faint grid that subtly evokes the symbolic environment */
+  .deck::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(900px 600px at 80% -10%, rgba(91,200,214,0.06), transparent 60%),
+      radial-gradient(800px 600px at -5% 110%, rgba(226,135,59,0.07), transparent 60%);
+  }
+  .slide-inner{position:relative;z-index:1}
+
+  /* ---------- Typography ---------- */
+  .kicker{
+    font-family:var(--sans);
+    font-size:.78rem;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:1.4rem;font-weight:600;
+    display:flex;align-items:center;gap:.8rem;
+  }
+  .kicker .tick{color:var(--ember)}
+  h1{
+    font-family:var(--serif);font-weight:600;line-height:1.02;
+    font-size:clamp(2.6rem,7vw,6rem);letter-spacing:-0.02em;
+  }
+  h2{
+    font-family:var(--serif);font-weight:600;line-height:1.06;
+    font-size:clamp(2rem,4.6vw,3.6rem);letter-spacing:-0.015em;
+  }
+  h3{
+    font-family:var(--serif);font-weight:500;
+    font-size:clamp(1.4rem,2.6vw,2.1rem);line-height:1.15;
+  }
+  p.lead{
+    font-size:clamp(1.1rem,1.8vw,1.5rem);line-height:1.5;color:var(--faint);
+    max-width:48ch;margin-top:1.4rem;font-weight:400;
+  }
+  p.body{font-size:clamp(1rem,1.5vw,1.2rem);line-height:1.55;color:var(--muted);max-width:62ch;margin-top:1rem}
+  .em{color:var(--ember)}
+  .cl{color:var(--cool)}
+  .ink{color:var(--ink)}
+  .quote{
+    font-family:var(--serif);font-style:italic;font-weight:400;
+    font-size:clamp(1.5rem,3.2vw,2.6rem);line-height:1.3;letter-spacing:-0.01em;
+    max-width:24ch;
+  }
+  .cite{margin-top:1.6rem;font-size:.9rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+  .big-statement{
+    font-family:var(--serif);font-weight:600;line-height:1.04;
+    font-size:clamp(2.4rem,6vw,5.2rem);letter-spacing:-0.02em;max-width:18ch;
+  }
+
+  /* ---------- Components ---------- */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.4rem,4vw,4rem);align-items:start;margin-top:2rem}
+  @media(max-width:820px){.cols{grid-template-columns:1fr;gap:1.4rem}}
+
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:clamp(1.1rem,2vw,1.8rem);
+  }
+  .card .tag{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;margin-bottom:.7rem}
+  .card.warm{border-color:rgba(226,135,59,0.4);background:linear-gradient(180deg,var(--ember-soft),var(--panel))}
+  .card.warm .tag{color:var(--ember)}
+  .card.cold{border-color:rgba(91,200,214,0.35);background:linear-gradient(180deg,var(--cool-soft),var(--panel))}
+  .card.cold .tag{color:var(--cool)}
+  .card h3{margin-bottom:.5rem}
+  .card p{color:var(--muted);font-size:1rem;line-height:1.5}
+
+  .four{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2.2rem}
+  @media(max-width:820px){.four{grid-template-columns:repeat(2,1fr)}}
+  .fric{border:1px solid var(--line);border-radius:12px;padding:1.2rem 1.1rem;background:var(--panel)}
+  .fric .n{font-family:var(--serif);font-size:1.5rem;color:var(--ember);font-weight:600}
+  .fric .l{margin-top:.5rem;font-weight:600;font-size:1.02rem}
+  .fric .d{margin-top:.4rem;color:var(--muted);font-size:.92rem;line-height:1.45}
+
+  .acro{display:flex;flex-direction:column;gap:.55rem;margin-top:1.8rem}
+  .acro-row{display:flex;align-items:baseline;gap:1rem}
+  .acro-row .ltr{font-family:var(--serif);font-weight:700;font-size:1.7rem;color:var(--ember);width:1.4ch;flex:none}
+  .acro-row .word{font-size:1.15rem;font-weight:600}
+  .acro-row .gloss{color:var(--muted);font-size:1rem}
+
+  ul.clean{list-style:none;margin-top:1.4rem;display:flex;flex-direction:column;gap:.9rem}
+  ul.clean li{padding-left:1.5rem;position:relative;font-size:clamp(1rem,1.6vw,1.22rem);line-height:1.45;color:var(--ink);max-width:60ch}
+  ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:.55rem;height:.55rem;border-radius:50%;background:var(--ember)}
+  ul.clean li span{color:var(--muted)}
+
+  /* ---------- Stage rail (media ecology through-line) ---------- */
+  #rail{
+    position:fixed;left:0;right:0;bottom:62px;z-index:5;
+    display:none;justify-content:center;pointer-events:none;
+  }
+  #rail .track{display:flex;align-items:flex-start;gap:0;max-width:1100px;width:90%}
+  #rail .node{flex:1;position:relative;text-align:center;opacity:.32;transition:opacity .45s ease}
+  #rail .node .dot{
+    width:14px;height:14px;border-radius:50%;margin:0 auto 8px;
+    background:var(--muted);border:2px solid var(--bg);transition:all .45s ease;
+  }
+  #rail .node .lbl{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);line-height:1.25;padding:0 .3rem}
+  #rail .node::after{content:"";position:absolute;top:6px;left:50%;width:100%;height:2px;background:var(--line);z-index:-1}
+  #rail .node:last-child::after{display:none}
+  #rail .node.on{opacity:1}
+  #rail .node.on .dot{background:var(--ember)}
+  #rail .node.cur .dot{background:var(--ember);box-shadow:0 0 0 6px var(--ember-soft);transform:scale(1.15)}
+  #rail .node.cur .lbl{color:var(--ink)}
+  #rail .node.algo.on .dot{background:var(--cool)}
+  #rail .node.algo.cur .dot{background:var(--cool);box-shadow:0 0 0 6px var(--cool-soft)}
+
+  /* ---------- Discussion beat styling ---------- */
+  .slide.beat{
+    background:
+      radial-gradient(1200px 700px at 50% 30%, rgba(226,135,59,0.16), transparent 65%),
+      var(--bg2);
+  }
+  .beat-badge{
+    display:inline-flex;align-items:center;gap:.6rem;
+    border:1px solid var(--ember);color:var(--ember);
+    padding:.45rem 1rem;border-radius:999px;font-size:.74rem;letter-spacing:.22em;
+    text-transform:uppercase;font-weight:600;margin-bottom:1.6rem;
+  }
+  .beat-badge .pulse{width:9px;height:9px;border-radius:50%;background:var(--ember);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(226,135,59,.5)}70%{box-shadow:0 0 0 12px rgba(226,135,59,0)}100%{box-shadow:0 0 0 0 rgba(226,135,59,0)}}
+  .beat-howto{margin-top:2rem;color:var(--faint);font-size:1rem;display:flex;gap:1.6rem;flex-wrap:wrap}
+  .beat-howto b{color:var(--ink);font-weight:600}
+
+  /* ---------- Title slide ---------- */
+  .title-wrap{display:flex;flex-direction:column;justify-content:center;height:100%}
+  .monogram{font-family:var(--serif);font-size:1.4rem;font-weight:600;color:var(--ember)}
+  .monogram sup{color:var(--cool);font-size:.7em}
+  .title-meta{margin-top:2.6rem;display:flex;flex-wrap:wrap;gap:1.4rem 2.4rem;color:var(--muted);font-size:.95rem}
+  .title-meta b{color:var(--ink);font-weight:600;display:block;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.25rem;color:var(--faint)}
+
+  /* ---------- Section divider ---------- */
+  .divider .num{font-family:var(--serif);font-size:clamp(4rem,16vw,12rem);color:var(--ember);line-height:.9;font-weight:600;opacity:.9}
+  .divider h2{margin-top:.4rem}
+
+  /* ---------- Chrome (nav / progress / hud) ---------- */
+  #progress{position:fixed;top:0;left:0;height:3px;background:var(--ember);width:0;z-index:20;transition:width .4s ease}
+  .hud{position:fixed;bottom:18px;z-index:20;display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.8rem}
+  #hud-left{left:24px;font-family:var(--serif);font-style:italic}
+  #hud-left sup{color:var(--cool);font-style:normal}
+  #hud-right{right:24px;display:flex;align-items:center;gap:1rem}
+  .deck-switch{
+    position:fixed;top:18px;right:24px;z-index:30;
+    display:inline-flex;align-items:center;gap:.5rem;
+    border:1px solid var(--line);border-radius:999px;
+    padding:.62rem .9rem;background:rgba(23,29,39,.82);
+    color:var(--ink);font-size:.72rem;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;text-decoration:none;
+    backdrop-filter:blur(16px);
+  }
+  .deck-switch:hover{border-color:var(--ember);color:var(--ember)}
+  .nav-btn{
+    background:var(--panel);border:1px solid var(--line);color:var(--ink);
+    width:38px;height:38px;border-radius:9px;cursor:pointer;font-size:1.1rem;
+    display:flex;align-items:center;justify-content:center;transition:all .2s;
+  }
+  .nav-btn:hover{border-color:var(--ember);color:var(--ember)}
+  #counter{font-variant-numeric:tabular-nums;letter-spacing:.05em;min-width:4ch;text-align:center}
+  .section-flag{position:fixed;top:20px;right:24px;z-index:20;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .section-flag b{color:var(--ember);font-weight:600}
+
+  /* ---------- Overview grid ---------- */
+  #overview{
+    position:fixed;inset:0;background:rgba(8,10,14,.97);z-index:40;display:none;
+    padding:3.5rem 2rem 2rem;overflow:auto;
+  }
+  #overview.show{display:block}
+  #overview h4{font-family:var(--sans);font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:2rem}
+  .ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;max-width:1200px;margin:0 auto}
+  .ov-card{border:1px solid var(--line);border-radius:10px;padding:1rem;cursor:pointer;background:var(--panel);transition:all .2s;min-height:96px}
+  .ov-card:hover{border-color:var(--ember);transform:translateY(-2px)}
+  .ov-card .ovn{font-size:.7rem;color:var(--muted);font-variant-numeric:tabular-nums}
+  .ov-card .ovt{font-family:var(--serif);font-size:1.02rem;margin-top:.4rem;line-height:1.2}
+
+  /* ---------- Helpers ---------- */
+  .pre-rail-space{height:90px}
+  .hint{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:20;color:var(--faint);font-size:.74rem;letter-spacing:.05em;opacity:.8}
+  .hint kbd{background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-family:var(--sans);font-size:.7rem}
+  @media(max-width:680px){.hint{display:none}#rail .node .lbl{font-size:.5rem}}
+  .small-links{margin-top:2rem;display:flex;flex-direction:column;gap:.6rem}
+  .small-links a{color:var(--cool);text-decoration:none;font-size:1.02rem;border-bottom:1px solid transparent;width:fit-content}
+  .small-links a:hover{border-color:var(--cool)}
+  .two-up{display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center}
+  @media(max-width:820px){.two-up{grid-template-columns:1fr;gap:1.5rem}}
+
+  @media print{
+    @page{size:landscape;margin:0}
+    html,body{
+      background:var(--bg)!important;color:var(--ink)!important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact;
+      overflow:visible!important;height:auto!important;
+    }
+    .deck{position:relative!important;height:auto!important}
+    .slide{
+      position:relative!important;display:flex!important;opacity:1!important;
+      visibility:visible!important;transform:none!important;
+      width:100vw!important;height:100vh!important;
+      page-break-after:always;break-after:page;
+    }
+    #progress,.section-flag,.hud,#rail,.hint,.deck-switch{display:none!important}
+  }
+</style>
+</head>
+<body>
+
+<a class="deck-switch" href="../social-studies/">Workshop version</a>
+<div id="progress"></div>
+<div class="section-flag" id="sectionFlag"></div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 TITLE -->
+  <section class="slide active" data-section="">
+    <div class="slide-inner title-wrap">
+      <div class="monogram">T<sup>a</sup> &nbsp;Tertiary Algorithmicity</div>
+      <h1 style="margin-top:1.6rem">The Frictionless<br>Citizen</h1>
+      <p class="lead">Pedagogical friction, tertiary algorithmicity, and the curricular stakes of social studies in the age of generative AI.</p>
+      <div class="title-meta">
+        <div><b>Presenter</b>Micah J. Miner, CETL, Ed.S.</div>
+        <div><b>Affiliation</b>National Louis University</div>
+        <div><b>Venue</b>AAACS Annual Meeting (Virtual)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 SECTION 01 -->
+  <section class="slide divider" data-section="01 The Framing">
+    <div class="slide-inner">
+      <div class="num">01</div>
+      <h2>The framing</h2>
+      <p class="body">Most conversations about generative AI in school start in the wrong place.</p>
+    </div>
+  </section>
+
+  <!-- 3 PROVOCATION -->
+  <section class="slide" data-section="01 The Framing">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> Provocation</div>
+      <h2>A student can now produce a flawless argument about democracy <span class="em">without ever having argued.</span></h2>
+      <p class="lead">The work looks finished. The grade holds. The formation never happened.</p>
+    </div>
+  </section>
+
+  <!-- 4 THE WRONG QUESTION -->
+  <section class="slide" data-section="01 The Framing">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> The wrong question</div>
+      <h2>Ban or embrace. Cheat or innovate. Risk or opportunity.</h2>
+      <p class="body">The binary is convenient for policy. It is also a way of not asking the harder question. It treats AI as a tool to manage rather than a change in the conditions of thought.</p>
+    </div>
+  </section>
+
+  <!-- 5 THE REAL QUESTION -->
+  <section class="slide" data-section="01 The Framing">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> The real question</div>
+      <h2 class="ink">What forms a citizen when the symbolic environment of civic knowledge is increasingly <span class="cl">machine generated and machine curated?</span></h2>
+      <p class="lead">This is a curriculum question, not an integrity question. Curriculum studies gives us the vocabulary to answer it.</p>
+    </div>
+  </section>
+
+  <!-- 6 SECTION 02 -->
+  <section class="slide divider" data-section="02 A Curriculum of Friction">
+    <div class="slide-inner">
+      <div class="num">02</div>
+      <h2>Social studies has always been a curriculum of friction</h2>
+    </div>
+  </section>
+
+  <!-- 7 SOCIAL STUDIES WARS -->
+  <section class="slide" data-section="02 A Curriculum of Friction">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> The social studies wars</div>
+      <h3>The field's whole history is friction made visible.</h3>
+      <ul class="clean">
+        <li>Whose history is told, and whose is left in the null curriculum. <span>(Eisner)</span></li>
+        <li>Whether the aim is a unified national story or critical civic inquiry. <span>(Evans, the social studies wars)</span></li>
+        <li>Transmission of facts versus deliberation over contested questions.</li>
+        <li>Textbooks as battlegrounds for competing visions of the good society.</li>
+      </ul>
+      <p class="body">Deliberation, the reading of conflicting sources, the defense of a claim before a real public. The discipline runs on resistance, not smooth delivery.</p>
+    </div>
+  </section>
+
+  <!-- 8 SECTION 03 -->
+  <section class="slide divider" data-section="03 Beyond Secondary Orality">
+    <div class="slide-inner">
+      <div class="num">03</div>
+      <h2>Beyond secondary orality</h2>
+      <p class="body">A media ecology account of what generative AI changes.</p>
+    </div>
+  </section>
+
+  <!-- 9 ONG -->
+  <section class="slide" data-section="03 Beyond Secondary Orality" data-rail="3" data-cur="2">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> Theoretical anchor</div>
+      <div class="quote">"By separating the knower from the known, writing makes possible increasingly articulate introspectivity."</div>
+      <div class="cite">Walter Ong, Orality and Literacy, 1982</div>
+      <p class="body">Communication technologies do not just carry pre-formed thought. They restructure consciousness. Each transition is a gain and a loss.</p>
+    </div>
+    <div class="pre-rail-space"></div>
+  </section>
+
+  <!-- 10 PATTERN WE REPEAT -->
+  <section class="slide" data-section="03 Beyond Secondary Orality">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> A pattern we keep repeating</div>
+      <h3>New media are first treated as tools to manage, only later as shifts in the conditions of thought.</h3>
+      <div class="cols">
+        <div class="card"><div class="tag">c. 1450</div><h3>Printing press</h3><p>Debated as access and censorship. Not as the reorganization of memory and the birth of private interiority.</p></div>
+        <div class="card"><div class="tag">c. 1920</div><h3>Broadcast</h3><p>Debated as content quality. Not as a reshaping of individual and communal consciousness.</p></div>
+      </div>
+      <p class="body" style="margin-top:1.4rem">Generative AI, since 2022, is debated as cheating or innovation. The deeper transformation becomes legible only after it has begun.</p>
+    </div>
+  </section>
+
+  <!-- 11 THREE BROKEN ASSUMPTIONS -->
+  <section class="slide" data-section="03 Beyond Secondary Orality">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> The analytical hinge</div>
+      <h3>Three assumptions in Ong's framework no longer hold.</h3>
+      <div class="four" style="grid-template-columns:repeat(3,1fr)">
+        <div class="fric"><div class="n">i</div><div class="l">Humans originate</div><div class="d">Neural networks now produce essays and arguments without human consciousness behind them.</div></div>
+        <div class="fric"><div class="n">ii</div><div class="l">Distribution is transparent</div><div class="d">Engagement-optimized feeds are proprietary and opaque. Two students inhabit different informational worlds.</div></div>
+        <div class="fric"><div class="n">iii</div><div class="l">Media is external</div><div class="d">Personalized environments reflect the user's own patterns back. The mirror is no longer outside.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 EXTENSION I -->
+  <section class="slide" data-section="03 Beyond Secondary Orality" data-rail="4" data-cur="4">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> Extension I</div>
+      <h2 class="cl">Algorithmic secondary orality</h2>
+      <p class="lead">Humans still create. Algorithms increasingly decide what reaches which consciousness.</p>
+      <p class="body">September 2006: the Facebook News Feed launches. The feed replaces the schedule. Creation stays human; editorial judgment becomes algorithmic, proprietary, and opaque. The first assumption to break is transparent distribution.</p>
+    </div>
+    <div class="pre-rail-space"></div>
+  </section>
+
+  <!-- 13 EXTENSION II -->
+  <section class="slide" data-section="03 Beyond Secondary Orality" data-rail="5" data-cur="5">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> Extension II</div>
+      <h2 class="em">Tertiary algorithmicity</h2>
+      <p class="lead">Algorithmic systems both generate and curate symbolic content, rendering human authorship optional at scale.</p>
+      <p class="body">Not "tertiary orality," because the issue is no longer the retrieval of oral qualities. The source of symbolic expression itself becomes nonhuman. The stages coexist; this is an analytical sequence, not a clean replacement.</p>
+    </div>
+    <div class="pre-rail-space"></div>
+  </section>
+
+  <!-- 14 THREE CONSEQUENCES -->
+  <section class="slide" data-section="03 Beyond Secondary Orality">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> Three consequences for learning</div>
+      <div class="four" style="grid-template-columns:repeat(3,1fr)">
+        <div class="card warm"><div class="tag">Noetic displacement</div><p>Synthesis and meaning-making are offloaded from the learner to the algorithm.</p></div>
+        <div class="card warm"><div class="tag">Rhetorical saturation</div><p>Machine text crowds the environment. The genuine audience disappears.</p></div>
+        <div class="card warm"><div class="tag">Existential abstraction</div><p>Claims are severed from lived experience and from accountability.</p></div>
+      </div>
+      <p class="body" style="margin-top:1.6rem">In a social studies classroom these are not integrity problems. They reorganize the environment in which civic reasoning is formed.</p>
+    </div>
+  </section>
+
+  <!-- 15 SECTION 04 -->
+  <section class="slide divider" data-section="04 The Frictionless Citizen">
+    <div class="slide-inner">
+      <div class="num">04</div>
+      <h2>Unproductive success, and its civic form</h2>
+    </div>
+  </section>
+
+  <!-- 16 UNPRODUCTIVE SUCCESS -->
+  <section class="slide" data-section="04 The Frictionless Citizen">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> What learning science warns about</div>
+      <h2>Unproductive success</h2>
+      <p class="lead">Correct academic performance without the cognitive struggle that builds durable understanding.</p>
+      <p class="body">Desirable difficulties (Bjork) and productive failure (Kapur) say the struggle is not friction in the way of learning. The struggle is the learning.</p>
+    </div>
+  </section>
+
+  <!-- 17 THE FRICTIONLESS CITIZEN -->
+  <section class="slide" data-section="04 The Frictionless Citizen">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> The figure at the center of this talk</div>
+      <div class="big-statement">A frictionless citizen is a correct answer with <span class="em">no one home.</span></div>
+      <p class="lead">Able to generate the right civic output, having skipped the deliberative labor that democratic life requires.</p>
+    </div>
+  </section>
+
+  <!-- 18 DISCUSSION BEAT 1 -->
+  <section class="slide beat" data-section="Complicated Conversation">
+    <div class="slide-inner">
+      <div class="beat-badge"><span class="pulse"></span> Complicated Conversation 1</div>
+      <h2>If an AI can produce a defensible argument about justice, what is left for the student to do?</h2>
+      <p class="lead">And is that remainder the actual curriculum?</p>
+      <div class="beat-howto">
+        <span><b>Virtual:</b> drop a one-line answer in the chat.</span>
+        <span><b>Or:</b> unmute and take thirty seconds.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 SECTION 05 -->
+  <section class="slide divider" data-section="05 Friction as Curriculum">
+    <div class="slide-inner">
+      <div class="num">05</div>
+      <h2>Friction is not a technique. It is curriculum.</h2>
+    </div>
+  </section>
+
+  <!-- 20 PINAR / BIESTA -->
+  <section class="slide" data-section="05 Friction as Curriculum">
+    <div class="slide-inner">
+      <div class="two-up">
+        <div>
+          <div class="quote">Curriculum is complicated conversation.</div>
+          <div class="cite">After William Pinar</div>
+        </div>
+        <div>
+          <p class="body" style="margin-top:0">Friction is the slow, reflective, contested labor through which a subject is formed. Frictionlessness reduces curriculum to delivery, which is the return of Freire's banking model in a smoother package.</p>
+          <p class="body">Read through Biesta, frictionlessness is qualification with the risk engineered out. Friction is where subjectification, the appearance of a subject, becomes possible.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 21 FOUR FRICTIONS -->
+  <section class="slide" data-section="05 Friction as Curriculum">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> The pedagogical friction framework</div>
+      <h3>Four forms of resistance worth preserving on purpose.</h3>
+      <div class="four">
+        <div class="fric"><div class="n">N</div><div class="l">Noetic</div><div class="d">Cognitive struggle. The interpretive labor of making meaning.</div></div>
+        <div class="fric"><div class="n">R</div><div class="l">Rhetorical</div><div class="d">Engagement with real audiences who can push back.</div></div>
+        <div class="fric"><div class="n">E</div><div class="l">Existential</div><div class="d">Intellectual ownership. Standing behind a claim.</div></div>
+        <div class="fric"><div class="n">I</div><div class="l">Infrastructural</div><div class="d">The policy conditions that enable or foreclose the other three.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 22 SECTION 06 -->
+  <section class="slide divider" data-section="06 The Live Contrast">
+    <div class="slide-inner">
+      <div class="num">06</div>
+      <h2>Two answers to one civic prompt</h2>
+    </div>
+  </section>
+
+  <!-- 23 THE CONTRAST -->
+  <section class="slide" data-section="06 The Live Contrast">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> Same prompt: "Was the New Deal a betrayal or a rescue of American democracy?"</div>
+      <div class="cols">
+        <div class="card cold"><div class="tag">Frictionless path</div><h3>The generated essay</h3><p>Fluent, balanced, correctly structured. Cites both sides. Arrives in seconds. Reads as finished work and would earn the points.</p></div>
+        <div class="card warm"><div class="tag">Frictional path</div><h3>The student deliberation</h3><p>Halting, revised, argued with a partner who disagrees, defended aloud, owned. Slower, messier, and formative.</p></div>
+      </div>
+      <p class="body" style="margin-top:1.5rem">Both can produce a defensible position. Only one forms a citizen who can hold one.</p>
+    </div>
+  </section>
+
+  <!-- 24 WHAT DID EACH FORM (interactive moment / beat) -->
+  <section class="slide beat" data-section="Complicated Conversation">
+    <div class="slide-inner">
+      <div class="beat-badge"><span class="pulse"></span> Complicated Conversation 2</div>
+      <h2>What did each path <span class="em">form</span> in a citizen?</h2>
+      <p class="lead">Not which is better work. Which produces a person who can deliberate.</p>
+      <div class="beat-howto">
+        <span><b>Virtual:</b> reactions or chat, one word each.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 25 SECTION 07 -->
+  <section class="slide divider" data-section="07 Designing Friction Back In">
+    <div class="slide-inner">
+      <div class="num">07</div>
+      <h2>Designing friction back in, carefully</h2>
+    </div>
+  </section>
+
+  <!-- 26 CORE -->
+  <section class="slide" data-section="07 Designing Friction Back In">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> A design vocabulary for inquiry</div>
+      <h2 class="em">C.O.R.E.</h2>
+      <div class="acro">
+        <div class="acro-row"><span class="ltr">C</span><span class="word">Critical thinking</span><span class="gloss">interrogate sources, including the machine's.</span></div>
+        <div class="acro-row"><span class="ltr">O</span><span class="word">Openness</span><span class="gloss">hold contested questions open rather than resolving them early.</span></div>
+        <div class="acro-row"><span class="ltr">R</span><span class="word">Respect</span><span class="gloss">take opposing positions seriously enough to argue with them.</span></div>
+        <div class="acro-row"><span class="ltr">E</span><span class="word">Engagement</span><span class="gloss">participate in real deliberation, not simulated agreement.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 27 HEART -->
+  <section class="slide" data-section="07 Designing Friction Back In">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> A design vocabulary for ethical deliberation</div>
+      <h2 class="em">H.E.A.R.T.</h2>
+      <div class="acro">
+        <div class="acro-row"><span class="ltr">H</span><span class="word">Honesty</span><span class="gloss">name what is yours and what the tool produced.</span></div>
+        <div class="acro-row"><span class="ltr">E</span><span class="word">Empathy</span><span class="gloss">reason about people, not just positions.</span></div>
+        <div class="acro-row"><span class="ltr">A</span><span class="word">Accountability</span><span class="gloss">stand behind the claim you submit.</span></div>
+        <div class="acro-row"><span class="ltr">R</span><span class="word">Responsibility</span><span class="gloss">weigh the civic consequences of the argument.</span></div>
+        <div class="acro-row"><span class="ltr">T</span><span class="word">Thoughtfulness</span><span class="gloss">slow down where speed would skip the formation.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 28 PRODUCTIVE VS EXCLUSIONARY -->
+  <section class="slide" data-section="07 Designing Friction Back In">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> The guardrail</div>
+      <h3>Not all friction is just. The task is not more friction. It is the right friction, distributed fairly.</h3>
+      <div class="cols">
+        <div class="card warm"><div class="tag">Productive friction</div><p>Resistance that builds understanding, ownership, and civic capacity.</p></div>
+        <div class="card cold"><div class="tag">Exclusionary friction</div><p>Barriers that fall hardest on those already marginalized.</p></div>
+      </div>
+      <ul class="clean" style="margin-top:1.4rem">
+        <li>Prompting friction: <span>students made to flatten their dialect to be legible to the model.</span></li>
+        <li>Policy-driven exclusion: <span>blanket bans that turn under-resourced teachers into enforcement agents.</span></li>
+        <li>Cultural blindness: <span>machine dialogue that misreads local context and alienates the learner.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 29 SECTION 08 -->
+  <section class="slide divider" data-section="08 The Stakes">
+    <div class="slide-inner">
+      <div class="num">08</div>
+      <h2>Choosing our frictions on purpose</h2>
+    </div>
+  </section>
+
+  <!-- 30 THE PHARMAKON / SANCTUARY -->
+  <section class="slide" data-section="08 The Stakes">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> A philosophical anchor</div>
+      <h3>The classroom as a bounded sanctuary.</h3>
+      <p class="body">Concede that the wider media ecology may be a hyperreal simulation. The classroom can still be a deliberately walled micro-ecology where referential reality is sustained by the teacher. With Stiegler, friction is the pharmakon: the dose that turns the poison into a cure.</p>
+    </div>
+  </section>
+
+  <!-- 31 THESIS RESTATED -->
+  <section class="slide" data-section="08 The Stakes">
+    <div class="slide-inner">
+      <div class="kicker"><span class="tick">§</span> The argument in one line</div>
+      <h2>The threat is not that students will cheat. It is that they will <span class="em">succeed without having been formed.</span></h2>
+      <p class="lead">Social studies is the field where that loss is most clearly civic, and most worth defending.</p>
+    </div>
+  </section>
+
+  <!-- 32 CONTEST ME / RESOURCES -->
+  <section class="slide beat" data-section="Contest the Framework">
+    <div class="slide-inner">
+      <div class="beat-badge"><span class="pulse"></span> Contest the framework</div>
+      <h3>Where does this break down in your context? Argue with it.</h3>
+      <div class="small-links">
+        <a href="https://minerclass.github.io/genAI-ML-pedagogy-of-friction-site/">Pedagogical Friction companion</a>
+        <a href="https://minerclass.github.io/genAI-ML-the-long-arc-site/">The Long Arc of Machine Intelligence</a>
+        <a href="https://minerclass.github.io/dissertationquestionsbeta/tertiary-algorithmicity-companion/">Tertiary Algorithmicity companion</a>
+        <a href="https://micahminer.com">micahminer.com</a>
+      </div>
+      <p class="body" style="margin-top:1.6rem">Micah J. Miner, CETL, Ed.S. &nbsp;|&nbsp; National Louis University &nbsp;|&nbsp; admin@micahminer.com</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- Stage rail -->
+<div id="rail">
+  <div class="track">
+    <div class="node" data-i="1"><div class="dot"></div><div class="lbl">Primary<br>Orality</div></div>
+    <div class="node" data-i="2"><div class="dot"></div><div class="lbl">Literacy</div></div>
+    <div class="node" data-i="3"><div class="dot"></div><div class="lbl">Secondary<br>Orality</div></div>
+    <div class="node algo" data-i="4"><div class="dot"></div><div class="lbl">Algorithmic<br>Secondary Orality</div></div>
+    <div class="node algo" data-i="5"><div class="dot"></div><div class="lbl">Tertiary<br>Algorithmicity</div></div>
+  </div>
+</div>
+
+<!-- Chrome -->
+<div class="hud" id="hud-left">The Frictionless Citizen &nbsp;T<sup>a</sup></div>
+<div class="hud" id="hud-right">
+  <button class="nav-btn" id="prev" aria-label="Previous">&#8249;</button>
+  <span id="counter">1 / 1</span>
+  <button class="nav-btn" id="next" aria-label="Next">&#8250;</button>
+</div>
+<div class="hint">Navigate with <kbd>&larr;</kbd> <kbd>&rarr;</kbd> &nbsp; Overview <kbd>O</kbd> &nbsp; Fullscreen <kbd>F</kbd></div>
+
+<!-- Overview -->
+<div id="overview">
+  <h4>Session overview &middot; click any slide to jump</h4>
+  <div class="ov-grid" id="ovGrid"></div>
+</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var i = 0;
+  var progress = document.getElementById('progress');
+  var counter = document.getElementById('counter');
+  var flag = document.getElementById('sectionFlag');
+  var rail = document.getElementById('rail');
+  var railNodes = Array.prototype.slice.call(rail.querySelectorAll('.node'));
+  var overview = document.getElementById('overview');
+
+  function updateRail(slide){
+    var on = slide.getAttribute('data-rail');
+    if(!on){ rail.style.display = 'none'; return; }
+    rail.style.display = 'flex';
+    var n = parseInt(on,10);
+    var cur = parseInt(slide.getAttribute('data-cur') || on, 10);
+    railNodes.forEach(function(node){
+      var idx = parseInt(node.getAttribute('data-i'),10);
+      node.classList.toggle('on', idx <= n);
+      node.classList.toggle('cur', idx === cur);
+    });
+  }
+
+  function show(n){
+    i = Math.max(0, Math.min(total-1, n));
+    slides.forEach(function(s,idx){ s.classList.toggle('active', idx===i); });
+    var pct = total>1 ? (i/(total-1))*100 : 100;
+    progress.style.width = pct + '%';
+    counter.textContent = (i+1) + ' / ' + total;
+    var sec = slides[i].getAttribute('data-section') || '';
+    if(sec){
+      var parts = sec.split(' ');
+      var num = parts.shift();
+      flag.innerHTML = isNaN(parseInt(num,10)) ? sec : '<b>'+num+'</b> &nbsp;' + parts.join(' ');
+    } else { flag.innerHTML = ''; }
+    updateRail(slides[i]);
+  }
+
+  function next(){ show(i+1); }
+  function prev(){ show(i-1); }
+
+  document.getElementById('next').addEventListener('click', next);
+  document.getElementById('prev').addEventListener('click', prev);
+
+  document.addEventListener('keydown', function(e){
+    if(overview.classList.contains('show')){
+      if(e.key==='Escape' || e.key==='o' || e.key==='O'){ overview.classList.remove('show'); }
+      return;
+    }
+    switch(e.key){
+      case 'ArrowRight': case ' ': case 'PageDown': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'PageUp': e.preventDefault(); prev(); break;
+      case 'Home': show(0); break;
+      case 'End': show(total-1); break;
+      case 'o': case 'O': overview.classList.add('show'); break;
+      case 'f': case 'F':
+        if(!document.fullscreenElement){ document.documentElement.requestFullscreen(); }
+        else { document.exitFullscreen(); }
+        break;
+    }
+  });
+
+  // Touch swipe
+  var x0=null;
+  document.addEventListener('touchstart',function(e){ x0=e.touches[0].clientX; },{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(x0===null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if(Math.abs(dx)>50){ dx<0 ? next() : prev(); }
+    x0=null;
+  },{passive:true});
+
+  // Build overview
+  var ov = document.getElementById('ovGrid');
+  slides.forEach(function(s, idx){
+    var h = s.querySelector('h1, h2, h3, .big-statement, .quote');
+    var label = h ? h.textContent.trim().slice(0,70) : ('Slide ' + (idx+1));
+    var card = document.createElement('div');
+    card.className = 'ov-card';
+    card.innerHTML = '<div class="ovn">'+ (idx+1) +'</div><div class="ovt">'+ label +'</div>';
+    card.addEventListener('click', function(){ overview.classList.remove('show'); show(idx); });
+    ov.appendChild(card);
+  });
+
+  show(0);
+})();
+</script>
+</body>
+</html>

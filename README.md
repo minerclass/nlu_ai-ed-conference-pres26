@@ -1,14 +1,20 @@
 # Teaching Social Studies in the Age of AI
 
-This repository hosts a 50-minute virtual presentation by Micah Miner:
+This repository hosts a small family of AI-in-education presentation options by Micah Miner.
 
-**Teaching Social Studies in the Age of AI: Preserving Inquiry, Agency, and Democratic Learning**
+## Published Decks
 
-The deck is a browser-based GitHub Pages presentation designed for educators, school leaders, and doctoral/public scholarship audiences. It connects generative AI, social studies inquiry, C.O.R.E., H.E.A.R.T., pedagogical friction, media ecology, and democratic learning.
+- Root deck: `https://minerclass.github.io/nlu_ai-ed-conference-pres26/`
+- Social studies workshop version: `https://minerclass.github.io/nlu_ai-ed-conference-pres26/social-studies/`
+- The Frictionless Citizen / AAACS version: `https://minerclass.github.io/nlu_ai-ed-conference-pres26/frictionless-citizen/`
+
+The social studies deck is a browser-based 50-minute virtual presentation designed for educators, school leaders, and doctoral/public scholarship audiences. It connects generative AI, social studies inquiry, C.O.R.E., H.E.A.R.T., pedagogical friction, media ecology, and democratic learning.
+
+The Frictionless Citizen version is a more scholarly/keynote-style option centered on pedagogical friction, tertiary algorithmicity, and the curricular stakes of social studies in the age of generative AI.
 
 ## Live Site
 
-Once GitHub Pages is enabled for this repository, the deck should publish at:
+Once GitHub Pages is enabled for this repository, the main deck should publish at:
 
 `https://minerclass.github.io/nlu_ai-ed-conference-pres26/`
 
