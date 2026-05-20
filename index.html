@@ -1542,7 +1542,9 @@
                 size: landscape;
                 margin: 0;
             }
-            body {
+            html, body {
+                overflow: visible !important;
+                height: auto !important;
                 background: #0a0a0b !important;
                 color: #ece8dd !important;
                 -webkit-print-color-adjust: exact;
@@ -1554,7 +1556,8 @@
             .nav-drawer,
             .drawer-overlay,
             .controls,
-            .template-footer {
+            .template-footer,
+            .abstract-overlay {
                 display: none !important;
             }
             .deck-container {
@@ -1576,7 +1579,11 @@
                 left: 0 !important;
                 width: 100vw !important;
                 height: 100vh !important;
+                max-width: none !important;
+                max-height: none !important;
                 page-break-after: always !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
                 break-after: page !important;
                 box-sizing: border-box !important;
                 padding: 4rem 6rem !important;
