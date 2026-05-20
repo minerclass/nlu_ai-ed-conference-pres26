@@ -7,10 +7,11 @@ This repository hosts a small family of AI-in-education presentation options by 
 - Root deck: `https://minerclass.github.io/nlu_ai-ed-conference-pres26/`
 - Social studies workshop version: `https://minerclass.github.io/nlu_ai-ed-conference-pres26/social-studies/`
 - The Frictionless Citizen / AAACS version: `https://minerclass.github.io/nlu_ai-ed-conference-pres26/frictionless-citizen/`
+- The Frictionless Citizen / AAACS revised option: `https://minerclass.github.io/nlu_ai-ed-conference-pres26/aaacs-frictionless-citizen/`
 
 The social studies deck is a browser-based 50-minute virtual presentation designed for educators, school leaders, and doctoral/public scholarship audiences. It connects generative AI, social studies inquiry, C.O.R.E., H.E.A.R.T., pedagogical friction, media ecology, and democratic learning.
 
-The Frictionless Citizen version is a more scholarly/keynote-style option centered on pedagogical friction, tertiary algorithmicity, and the curricular stakes of social studies in the age of generative AI.
+The Frictionless Citizen versions are more scholarly/keynote-style options centered on pedagogical friction, tertiary algorithmicity, and the curricular stakes of social studies in the age of generative AI. The revised AAACS option more directly incorporates the two-student learning contrast, social studies as civic apprenticeship, classroom-to-system implications, and a redesign activity.
 
 ## Live Site
 
