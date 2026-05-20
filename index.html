@@ -1536,31 +1536,7 @@
             border-color: var(--accent);
         }
 
-        .deck-switch-link {
-            position: fixed;
-            top: 1.5rem;
-            right: 2rem;
-            z-index: 1000;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.65rem 0.95rem;
-            border: 1px solid var(--rule-strong);
-            border-radius: 999px;
-            background: rgba(20, 20, 22, 0.86);
-            color: var(--ink);
-            font-family: var(--mono);
-            font-size: 0.72rem;
-            letter-spacing: 0.08em;
-            text-decoration: none;
-            text-transform: uppercase;
-            backdrop-filter: blur(16px);
-        }
 
-        .deck-switch-link:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
 
         /* Print stylesheet for PDF exports */
         @media print {
@@ -1582,7 +1558,6 @@
             .nav-drawer,
             .drawer-overlay,
             .controls,
-            .deck-switch-link,
             .template-footer,
             .abstract-overlay {
                 display: none !important;
@@ -1624,9 +1599,6 @@
     </style>
 </head>
 <body>
-    <a class="deck-switch-link" href="social-studies/">Social studies version</a>
-    <a class="deck-switch-link" style="top:4.5rem" href="frictionless-citizen/">Frictionless citizen</a>
-    <a class="deck-switch-link" style="top:7.5rem" href="aaacs-frictionless-citizen/">AAACS revised option</a>
     <div class="ambient-orbs">
         <div class="orb orb-1" id="orb-1"></div>
         <div class="orb orb-2" id="orb-2"></div>
