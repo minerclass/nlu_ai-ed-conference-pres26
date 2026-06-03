@@ -1536,6 +1536,41 @@
             border-color: var(--accent);
         }
 
+        .resource-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            max-width: 760px;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            min-height: 2.35rem;
+            padding: 0.45rem 0.85rem;
+            border: 1px solid var(--rule);
+            border-radius: 4px;
+            color: var(--ink-muted);
+            text-decoration: none;
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.025);
+            transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+        }
+
+        .resource-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(56, 189, 248, 0.06);
+        }
+
 
 
         /* Print stylesheet for PDF exports */
@@ -2100,6 +2135,21 @@
             </div>
             
             <button class="prompt-btn" onclick="generateSeminarPrompt()">Generate Next Seminar Prompt</button>
+
+            <div class="resource-strip" aria-label="Presentation source links">
+                <a class="resource-link" href="https://digitalcommons.nl.edu/ie/vol18/iss1/4/" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+                    Journal Article
+                </a>
+                <a class="resource-link" href="https://minerclass.github.io/When-Output-Looks-Like-Learning/" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+                    Companion Guide
+                </a>
+                <a class="resource-link" href="https://minerclass.github.io/nlu_ai-ed-conference-pres26/" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-display" aria-hidden="true"></i>
+                    Presentation Link
+                </a>
+            </div>
 
             <!-- Large Watermark Logo -->
             <div class="watermark-bg">
