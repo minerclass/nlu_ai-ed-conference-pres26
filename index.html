@@ -246,6 +246,60 @@
             margin-top: 0.5rem;
         }
 
+        .participant-access {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            gap: 0.9rem;
+            max-width: 520px;
+            margin-top: 1.35rem;
+            padding: 0.7rem 0.85rem;
+            border: 1px solid var(--rule);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.025);
+            position: relative;
+            z-index: 2;
+        }
+
+        .participant-access img {
+            width: clamp(74px, 10vw, 104px);
+            aspect-ratio: 1;
+            display: block;
+            border-radius: 4px;
+            background: #fff;
+        }
+
+        .participant-access-label {
+            display: block;
+            font-family: var(--mono);
+            font-size: 0.58rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .participant-access-link {
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: clamp(0.92rem, 1.8vw, 1.15rem);
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.45);
+        }
+
+        .participant-access-link:hover {
+            color: var(--accent-green);
+            border-bottom-color: var(--accent-green);
+        }
+
+        .participant-access-note {
+            margin-top: 0.3rem;
+            color: var(--ink-soft);
+            font-size: 0.82rem;
+            line-height: 1.35;
+        }
+
         /* Slide 1 Abstract Modal */
         .abstract-overlay {
             position: absolute;
@@ -1724,6 +1778,16 @@
             <h1>When the Output Looks Like Learning: <br><em>Tertiary Algorithmicity, Unproductive Success, <br>and the Case for Pedagogical Friction in K–12 Schools</em></h1>
             <div class="authors">Micah J. Miner, CETL, Ed.S.</div>
             <div class="affiliation">Doctoral Candidate, National Louis University &bull; Curriculum, Advocacy, and Policy</div>
+            <div class="participant-access" aria-label="Participant access link">
+                <a href="https://bit.ly/4vwhNBg" target="_blank" rel="noopener noreferrer" aria-label="Open participant link">
+                    <img src="assets/participant-link-qr.png" alt="QR code for participant link">
+                </a>
+                <div>
+                    <span class="participant-access-label">Virtual participant link</span>
+                    <a class="participant-access-link" href="https://bit.ly/4vwhNBg" target="_blank" rel="noopener noreferrer">bit.ly/4vwhNBg</a>
+                    <div class="participant-access-note">Scan or click to follow along during the session.</div>
+                </div>
+            </div>
 
             <!-- Slide-down Abstract Card -->
             <div class="abstract-overlay" id="abstract-overlay">
