@@ -522,11 +522,19 @@
         .timeline-step {
             flex: 1;
             background: var(--bg);
+            border: 0;
             padding: 1.5rem 1.25rem;
             cursor: pointer;
             text-align: center;
             transition: background 0.3s var(--ease);
             position: relative;
+            color: inherit;
+        }
+
+        .timeline-step:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: -3px;
+            z-index: 2;
         }
 
         .timeline-step:hover,
@@ -2001,34 +2009,31 @@
                 <h2 class="slide-title">The word changed. Then the author changed.</h2>
             </div>
             <div class="slide-content">
-                <div class="timeline-track">
-                    <div class="timeline-stage">
-                        <span class="timeline-num">I</span>
-                        <h3>Primary Orality</h3>
-                        <p>The embodied voice carries knowledge.</p>
-                    </div>
-                    <div class="timeline-stage">
-                        <span class="timeline-num">II</span>
-                        <h3>Literacy</h3>
-                        <p>The written word fixes thought in space.</p>
-                    </div>
-                    <div class="timeline-stage">
-                        <span class="timeline-num">III</span>
-                        <h3>Secondary Orality</h3>
-                        <p>Electronic media rebroadcast human speech.</p>
-                    </div>
-                    <div class="timeline-stage">
-                        <span class="timeline-num">IV</span>
-                        <h3>Algorithmic Secondary Orality</h3>
-                        <p>Platforms curate and optimize human expression.</p>
-                    </div>
-                    <div class="timeline-stage active">
-                        <span class="timeline-num">V</span>
-                        <h3>Tertiary Algorithmicity</h3>
-                        <p>Algorithms generate the symbolic environment itself.</p>
-                    </div>
+                <div class="timeline-container" aria-label="Five stages of the technologized word">
+                    <button type="button" class="timeline-step active" aria-pressed="true" onclick="setTimelineStage(1, false)">
+                        <span class="step-node">I</span>
+                        <span class="step-label">Primary Orality</span>
+                    </button>
+                    <button type="button" class="timeline-step" aria-pressed="false" onclick="setTimelineStage(2, false)">
+                        <span class="step-node">II</span>
+                        <span class="step-label">Literacy</span>
+                    </button>
+                    <button type="button" class="timeline-step" aria-pressed="false" onclick="setTimelineStage(3, false)">
+                        <span class="step-node">III</span>
+                        <span class="step-label">Secondary Orality</span>
+                    </button>
+                    <button type="button" class="timeline-step" aria-pressed="false" onclick="setTimelineStage(4, false)">
+                        <span class="step-node">IV</span>
+                        <span class="step-label">Algorithmic Secondary Orality</span>
+                    </button>
+                    <button type="button" class="timeline-step rupture" aria-pressed="false" onclick="setTimelineStage(5, true)">
+                        <span class="step-node">V</span>
+                        <span class="step-label">Tertiary Algorithmicity</span>
+                    </button>
                 </div>
-                <div style="margin-top: 2rem;">
+                <div class="step-details-pane" id="timeline-details-pane" aria-live="polite">
+                    <h4 id="timeline-stage-title">Primary Orality</h4>
+                    <p id="timeline-stage-desc">Preserved knowledge is situational, communal, and mnemonic. Language is transient, and thoughts must be formulated in memorable patterns to endure.</p>
                     <a class="resource-link" href="https://minerclass.github.io/orality_game/?conference=1" target="_blank">
                         <i class="fa-solid fa-gamepad"></i>
                         Try the 90-second Orality simulation
@@ -2528,13 +2533,14 @@
         function setTimelineStage(index, isRupture) {
             const steps = document.querySelectorAll('.timeline-step');
             steps.forEach((step, idx) => {
-                if (idx < index) {
+                if (idx === index - 1) {
                     step.classList.add('active');
+                    step.setAttribute('aria-pressed', 'true');
                 } else {
                     step.classList.remove('active');
+                    step.setAttribute('aria-pressed', 'false');
                 }
             });
-            steps[index-1].classList.add('active');
 
             const title = document.getElementById('timeline-stage-title');
             const desc = document.getElementById('timeline-stage-desc');
