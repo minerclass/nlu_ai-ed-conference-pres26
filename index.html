@@ -1124,6 +1124,123 @@
             color: var(--accent);
         }
 
+        button.dim-tab {
+            width: 100%;
+            color: inherit;
+            font: inherit;
+            text-align: left;
+        }
+
+        .dim-tab:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        .bypass-comparison {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.5rem;
+            align-items: stretch;
+        }
+
+        .process-path {
+            padding: 1.5rem;
+            border: 1px solid var(--rule);
+            border-radius: 10px;
+            background: var(--bg-elevated);
+        }
+
+        .process-path.bypassed {
+            border-color: rgba(244, 63, 94, 0.45);
+        }
+
+        .process-path h3 {
+            font-family: var(--serif);
+            font-size: 1.55rem;
+            margin-bottom: 1rem;
+        }
+
+        .process-step {
+            padding: 0.7rem 0.85rem;
+            margin: 0.55rem 0;
+            border-left: 3px solid var(--accent);
+            background: rgba(56, 189, 248, 0.04);
+            color: var(--ink-soft);
+        }
+
+        .process-step.skipped {
+            border-color: var(--accent-rose);
+            color: var(--ink-faint);
+            text-decoration: line-through;
+        }
+
+        .comparison-arrow {
+            display: flex;
+            align-items: center;
+            color: var(--accent-rose);
+            font-size: 1.6rem;
+        }
+
+        .reflection-prompt,
+        .scenario-launchpad {
+            margin-top: 1.4rem;
+            padding: 1.15rem 1.3rem;
+            border-left: 4px solid var(--accent-gold);
+            background: rgba(251, 191, 36, 0.05);
+            color: var(--ink);
+        }
+
+        .scenario-launchpad {
+            margin-top: 0;
+            margin-bottom: 1.2rem;
+        }
+
+        .scenario-launchpad strong {
+            display: block;
+            color: var(--accent-gold);
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.45rem;
+        }
+
+        .timeline-track {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.8rem;
+        }
+
+        .timeline-stage {
+            min-height: 190px;
+            padding: 1.15rem;
+            border-top: 3px solid var(--rule-strong);
+            background: var(--bg-elevated);
+        }
+
+        .timeline-stage.active {
+            border-color: var(--accent-rose);
+            background: rgba(244, 63, 94, 0.05);
+        }
+
+        .timeline-stage h3 {
+            font-family: var(--serif);
+            font-size: 1.15rem;
+            margin: 0.7rem 0;
+        }
+
+        .timeline-stage p {
+            color: var(--ink-soft);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .timeline-num {
+            color: var(--accent-gold);
+            font-family: var(--mono);
+            font-size: 0.75rem;
+        }
+
         .dim-detail-pane {
             min-height: 350px;
             display: flex;
@@ -1847,46 +1964,32 @@
             </div>
         </div>
 
-        <!-- SLIDE 3: Key Terms (Interactive Schematic Visualizer) -->
+        <!-- SLIDE 3: Cognitive Bypass Comparison -->
         <div class="slide" id="slide-2">
             <div class="slide-header">
-                <div class="slide-subtitle">Vocabulary</div>
-                <h2 class="slide-title">Key Epistemic Foundations (Select concept to trace visual flow)</h2>
+                <div class="slide-subtitle">Where Thinking Happens</div>
+                <h2 class="slide-title">The artifact can remain. The learning process can disappear.</h2>
             </div>
             <div class="slide-content">
-                <div class="epistemic-layout">
-                    <div class="dimensions-menu">
-                        <div class="dim-tab active" onclick="setEpistemicVis(1)">
-                            <i class="fa-solid fa-pen-fancy"></i>
-                            <span>Symbolic Production</span>
-                        </div>
-                        <div class="dim-tab" onclick="setEpistemicVis(2)">
-                            <i class="fa-solid fa-globe"></i>
-                            <span>Symbolic Environment</span>
-                        </div>
-                        <div class="dim-tab" style="border-color: rgba(244, 63, 94, 0.2);" onclick="setEpistemicVis(3)">
-                            <i class="fa-solid fa-rotate-left" style="color: var(--accent-rose);"></i>
-                            <span>Cognitive Bypass</span>
-                        </div>
+                <div class="bypass-comparison">
+                    <div class="process-path">
+                        <h3 style="color: var(--accent);">Artifact produced through thinking</h3>
+                        <div class="process-step"><strong>Encounter a problem</strong> and recognize what must be understood.</div>
+                        <div class="process-step"><strong>Retrieve and connect</strong> prior knowledge, sources, and concepts.</div>
+                        <div class="process-step"><strong>Assemble meaning</strong> through drafting, testing, and revision.</div>
+                        <div class="process-step"><strong>Produce an artifact</strong> that leaves evidence of the thinking.</div>
                     </div>
-
-                    <div class="epistemic-visualizer">
-                        <h4 id="vis-title">Process: Symbolic Production</h4>
-                        <div class="vis-container" id="vis-container">
-                            <div class="vis-row highlight">
-                                <span class="vis-label">Step 1</span>
-                                <div class="vis-flow"><strong>Conceptual Schema</strong> in long term memory triggers search and retrieval.</div>
-                            </div>
-                            <div class="vis-row">
-                                <span class="vis-label">Step 2</span>
-                                <div class="vis-flow"><strong>Active Assembly</strong>: Wresting with grammar, syntax, and outline structures.</div>
-                            </div>
-                            <div class="vis-row">
-                                <span class="vis-label">Step 3</span>
-                                <div class="vis-flow"><strong>Externalized Artifact</strong>: Draft reflects deep structural understanding.</div>
-                            </div>
-                        </div>
+                    <div class="comparison-arrow" aria-hidden="true"><i class="fa-solid fa-not-equal"></i></div>
+                    <div class="process-path bypassed">
+                        <h3 style="color: var(--accent-rose);">Artifact produced through bypass</h3>
+                        <div class="process-step"><strong>Enter a prompt</strong> describing the desired output.</div>
+                        <div class="process-step skipped"><strong>Retrieve and connect</strong> prior knowledge, sources, and concepts.</div>
+                        <div class="process-step skipped"><strong>Assemble meaning</strong> through drafting, testing, and revision.</div>
+                        <div class="process-step" style="border-color: var(--accent-rose);"><strong>Receive a synthetic artifact</strong> that may resemble learning.</div>
                     </div>
+                </div>
+                <div class="reflection-prompt">
+                    <strong>Audience question:</strong> When the final artifacts look equally polished, what evidence of learning remains?
                 </div>
             </div>
         </div>
@@ -1894,40 +1997,43 @@
         <!-- SLIDE 4: Media Ecology Timeline -->
         <div class="slide" id="slide-3">
             <div class="slide-header">
-                <div class="slide-subtitle">Theoretical Framework</div>
-                <h2 class="slide-title">Extending Walter Ong's Media Ecology (Click timeline nodes)</h2>
+                <div class="slide-subtitle">A Media Ecology of Symbolic Production</div>
+                <h2 class="slide-title">The word changed. Then the author changed.</h2>
             </div>
             <div class="slide-content">
-                <div class="timeline-container">
-                    <div class="timeline-step active" onclick="setTimelineStage(1, false)">
-                        <div class="step-node">1</div>
-                        <div class="step-label">Primary Orality</div>
+                <div class="timeline-track">
+                    <div class="timeline-stage">
+                        <span class="timeline-num">I</span>
+                        <h3>Primary Orality</h3>
+                        <p>The embodied voice carries knowledge.</p>
                     </div>
-                    <div class="timeline-step" onclick="setTimelineStage(2, false)">
-                        <div class="step-node">2</div>
-                        <div class="step-label">Literacy</div>
+                    <div class="timeline-stage">
+                        <span class="timeline-num">II</span>
+                        <h3>Literacy</h3>
+                        <p>The written word fixes thought in space.</p>
                     </div>
-                    <div class="timeline-step" onclick="setTimelineStage(3, false)">
-                        <div class="step-node">3</div>
-                        <div class="step-label">Secondary Orality</div>
+                    <div class="timeline-stage">
+                        <span class="timeline-num">III</span>
+                        <h3>Secondary Orality</h3>
+                        <p>Electronic media rebroadcast human speech.</p>
                     </div>
-                    <div class="timeline-step" onclick="setTimelineStage(4, false)">
-                        <div class="step-node">4</div>
-                        <div class="step-label">Algorithmic Sec.</div>
+                    <div class="timeline-stage">
+                        <span class="timeline-num">IV</span>
+                        <h3>Algorithmic Secondary Orality</h3>
+                        <p>Platforms curate and optimize human expression.</p>
                     </div>
-                    <div class="timeline-step rupture" onclick="setTimelineStage(5, true)">
-                        <div class="step-node">5</div>
-                        <div class="step-label">Tertiary Alg.</div>
+                    <div class="timeline-stage active">
+                        <span class="timeline-num">V</span>
+                        <h3>Tertiary Algorithmicity</h3>
+                        <p>Algorithms generate the symbolic environment itself.</p>
                     </div>
                 </div>
-
-                <div class="step-details-pane" id="timeline-details-pane">
-                    <h4 id="timeline-stage-title">Primary Orality</h4>
-                    <p id="timeline-stage-desc">Preserved knowledge is Situational, communal, and mnemonic. Language is transient, and thoughts must be formulated in memorable patterns to endure.</p>
-                    <a class="resource-link" href="https://minerclass.github.io/orality_game/" target="_blank" rel="noopener noreferrer" style="margin-top: 1rem;">
-                        <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
-                        Play the Orality Game
+                <div style="margin-top: 2rem;">
+                    <a class="resource-link" href="https://minerclass.github.io/orality_game/?conference=1" target="_blank">
+                        <i class="fa-solid fa-gamepad"></i>
+                        Try the 90-second Orality simulation
                     </a>
+                    <span style="margin-left: 1rem; color: var(--ink-faint); font-family: var(--mono); font-size: 0.72rem;">Opens in a new tab; return here for debrief.</span>
                 </div>
             </div>
         </div>
@@ -2091,36 +2197,41 @@
         <div class="slide" id="slide-8">
             <div class="slide-header">
                 <div class="slide-subtitle">The Design Model</div>
-                <h2 class="slide-title">Four Dimensions of Pedagogical Friction (Select tabs)</h2>
+                <h2 class="slide-title">Which friction should we preserve, and which should we remove?</h2>
             </div>
             <div class="slide-content">
+                <div class="scenario-launchpad">
+                    <strong>Classroom scenario</strong>
+                    A student uses AI to produce a polished historical argument but cannot explain the evidence, defend the claim, or describe how the conclusion was reached.
+                </div>
                 <div class="dimensions-layout">
                     <div class="dimensions-menu">
-                        <div class="dim-tab active" onclick="setDimensionTab(1)">
+                        <button type="button" class="dim-tab active" aria-pressed="true" onclick="setDimensionTab(1)">
                             <i class="fa-solid fa-brain"></i>
                             <span>Noetic Friction</span>
-                        </div>
-                        <div class="dim-tab" onclick="setDimensionTab(2)">
+                        </button>
+                        <button type="button" class="dim-tab" aria-pressed="false" onclick="setDimensionTab(2)">
                             <i class="fa-solid fa-users"></i>
                             <span>Rhetorical Friction</span>
-                        </div>
-                        <div class="dim-tab" onclick="setDimensionTab(3)">
+                        </button>
+                        <button type="button" class="dim-tab" aria-pressed="false" onclick="setDimensionTab(3)">
                             <i class="fa-solid fa-fingerprint"></i>
                             <span>Existential Friction</span>
-                        </div>
-                        <div class="dim-tab" onclick="setDimensionTab(4)">
+                        </button>
+                        <button type="button" class="dim-tab" aria-pressed="false" onclick="setDimensionTab(4)">
                             <i class="fa-solid fa-building-columns"></i>
-                            <span>Infrastructural Friction</span>
-                        </div>
+                            <span>Infrastructural Conditions</span>
+                        </button>
                     </div>
                     <div class="dim-detail-pane" id="dim-detail-pane">
                         <h3 id="dim-detail-title" style="color: var(--accent);">Noetic Friction</h3>
                         <p id="dim-detail-desc">Preserves internal cognitive struggle. Requires students to struggle with concepts (e.g., initial drafts, thinking journals) before consulting AI tools.</p>
                         <div class="dim-quote" id="dim-detail-quote">"The necessary resistance encountered when wrestling with complex ideas, synthesizing information, and engaging in deliberate practice."</div>
                         <div style="margin-top: 2rem;">
-                            <a id="launch-game-btn" class="resource-link" href="https://minerclass.github.io/friction_game-/" target="_blank" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent); color: #000; font-family: var(--mono); font-size: 0.8rem; font-weight: 600; padding: 0.6rem 1.2rem; border-radius: 4px; box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); transition: all 0.3s ease;">
-                                <i class="fa-solid fa-gamepad"></i> Launch Friction Lab Game
+                            <a id="launch-game-btn" class="resource-link" href="https://minerclass.github.io/friction_game-/?conference=1" target="_blank" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent); color: #000; font-family: var(--mono); font-size: 0.8rem; font-weight: 600; padding: 0.6rem 1.2rem; border-radius: 4px; box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); transition: all 0.3s ease;">
+                                <i class="fa-solid fa-gamepad"></i> Begin the 5-minute Friction Lab challenge
                             </a>
+                            <div style="margin-top: 0.55rem; color: var(--ink-faint); font-family: var(--mono); font-size: 0.68rem;">Choose a response, notice the tradeoff, then return here to debrief.</div>
                         </div>
                     </div>
                 </div>
@@ -2310,9 +2421,9 @@
                 color: "var(--accent-green)"
             },
             {
-                title: "Infrastructural Friction",
-                desc: "Focuses on policy, systems, and grading. Distinguishes productive accommodation (for language barriers or physical limitations) from cognitive bypass.",
-                quote: "Policy and institutional conditions that either enable or constrain the preservation of the other three dimensions of friction.",
+                title: "Infrastructural Conditions",
+                desc: "Not a fourth peer dimension. Policy, grading, time, and accommodation systems determine whether noetic, rhetorical, and existential friction can persist without becoming exclusionary.",
+                quote: "The system is the condition of possibility beneath the Head, the Room, and the World.",
                 color: "var(--accent-rose)"
             }
         ];
@@ -2384,8 +2495,10 @@
             tabs.forEach((tab, idx) => {
                 if (idx === index - 1) {
                     tab.classList.add('active');
+                    tab.setAttribute('aria-pressed', 'true');
                 } else {
                     tab.classList.remove('active');
+                    tab.setAttribute('aria-pressed', 'false');
                 }
             });
 
@@ -2586,8 +2699,10 @@
             tabs.forEach((tab, idx) => {
                 if (idx === index - 1) {
                     tab.classList.add('active');
+                    tab.setAttribute('aria-pressed', 'true');
                 } else {
                     tab.classList.remove('active');
+                    tab.setAttribute('aria-pressed', 'false');
                 }
             });
 
@@ -2750,24 +2865,17 @@
         }
 
         function showSlide(index) {
-            const activeSlide = document.querySelector('.slide.active');
             const targetSlide = document.getElementById(`slide-${index}`);
 
-            if (activeSlide === targetSlide) return;
+            if (!targetSlide || index < 0 || index >= totalSlides) return;
 
-            // Animate out active
-            if (activeSlide) {
-                gsap.to(activeSlide, { 
-                    opacity: 0, 
-                    y: -10, 
-                    scale: 0.98,
-                    duration: 0.35, 
-                    ease: 'power2.inOut',
-                    onComplete: () => {
-                        activeSlide.classList.remove('active');
-                    }
-                });
-            }
+            document.querySelectorAll('.slide').forEach(slide => {
+                gsap.killTweensOf(slide);
+                if (slide !== targetSlide) {
+                    slide.classList.remove('active');
+                    gsap.set(slide, { opacity: 0, y: 0, scale: 1 });
+                }
+            });
 
             // Animate in target
             targetSlide.classList.add('active');
@@ -2777,7 +2885,17 @@
             );
 
             currentSlide = index;
+            history.replaceState(null, '', `#${index + 1}`);
             updateProgress();
+
+            window.setTimeout(() => {
+                document.querySelectorAll('.slide').forEach(slide => {
+                    if (slide !== targetSlide) {
+                        slide.classList.remove('active');
+                        gsap.set(slide, { opacity: 0, y: 0, scale: 1 });
+                    }
+                });
+            }, 600);
         }
 
         function nextSlide() {
@@ -2807,10 +2925,24 @@
 
         // Key Listeners
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'ArrowRight' || e.code === 'Space') {
+            if (e.target.closest('button, a, input, textarea, select')) return;
+            if (e.code === 'ArrowRight' || e.code === 'Space' || e.code === 'PageDown') {
+                e.preventDefault();
                 nextSlide();
-            } else if (e.code === 'ArrowLeft') {
+            } else if (e.code === 'ArrowLeft' || e.code === 'PageUp') {
+                e.preventDefault();
                 prevSlide();
+            } else if (e.code === 'Home') {
+                showSlide(0);
+            } else if (e.code === 'End') {
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        window.addEventListener('hashchange', () => {
+            const hashSlide = Number.parseInt(location.hash.slice(1), 10);
+            if (Number.isInteger(hashSlide) && hashSlide >= 1 && hashSlide <= totalSlides) {
+                showSlide(hashSlide - 1);
             }
         });
 
@@ -2837,7 +2969,12 @@
         }
 
         // Init progress bar
-        updateProgress();
+        const requestedSlide = Number.parseInt(location.hash.slice(1), 10);
+        if (Number.isInteger(requestedSlide) && requestedSlide >= 1 && requestedSlide <= totalSlides) {
+            showSlide(requestedSlide - 1);
+        } else {
+            updateProgress();
+        }
     </script>
 </body>
 </html>

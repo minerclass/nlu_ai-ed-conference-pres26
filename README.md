@@ -11,6 +11,8 @@ This repository hosts a small family of AI-in-education presentation options by 
 
 The root deck is an immersive, interactive 20-minute overview based on Micah Miner's journal article, "When the Output Looks Like Learning." It is designed for the AI in Education: Research, Practice, and Perspectives mini conference and focuses on tertiary algorithmicity, unproductive success, and pedagogical friction in K-12 schools.
 
+The root deck uses a short Orality simulation as an optional media-ecology demonstration and Friction Lab as the primary participatory design challenge. Each game includes a conference mode and a return path to the relevant presentation slide.
+
 The social studies deck is a separate browser-based 50-minute virtual presentation designed for educators, school leaders, and doctoral/public scholarship audiences. It connects generative AI, social studies inquiry, C.O.R.E., H.E.A.R.T., pedagogical friction, media ecology, and democratic learning.
 
 The Frictionless Citizen versions are more scholarly/keynote-style options centered on pedagogical friction, tertiary algorithmicity, and the curricular stakes of social studies in the age of generative AI. The revised AAACS option more directly incorporates the two-student learning contrast, social studies as civic apprenticeship, classroom-to-system implications, and a redesign activity.
