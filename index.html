@@ -2000,6 +2000,11 @@
                     <div class="matrix-detail-card" id="matrix-detail-card" style="border-color: rgba(244, 63, 94, 0.2);">
                         <h3 id="matrix-detail-title" style="color: var(--accent-rose);">Unproductive Success</h3>
                         <p id="matrix-detail-desc">The core threat of Generative AI. The output looks flawless, but the student bypassed the desirable difficulties. Retrieval strength and schema consolidation are zero.</p>
+                        <div style="margin-top: 1.5rem;">
+                            <a id="matrix-game-btn" class="nav-btn" href="https://minerclass.github.io/friction_game-/" target="_blank" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent-rose); color: #000; font-family: var(--mono); font-size: 0.8rem; font-weight: 600; padding: 0.6rem 1.2rem; border-radius: 4px; box-shadow: 0 0 15px rgba(244, 63, 94, 0.3); transition: all 0.3s ease;">
+                                <i class="fa-solid fa-gamepad"></i> Explore in Friction Lab
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2505,21 +2510,31 @@
             gsap.to(card, { opacity: 0, x: 15, duration: 0.15, onComplete: () => {
                 title.textContent = name;
                 desc.textContent = description;
+                let btnColor = "var(--accent)";
                 if (name === "Unproductive Success") {
                     title.style.color = "var(--accent-rose)";
                     card.style.borderColor = "rgba(244, 63, 94, 0.25)";
+                    btnColor = "var(--accent-rose)";
                 } else if (name === "Productive Success") {
                     title.style.color = "var(--accent-green)";
                     card.style.borderColor = "rgba(52, 211, 153, 0.25)";
+                    btnColor = "var(--accent-green)";
                 } else if (name === "Productive Failure") {
                     title.style.color = "rgba(52, 211, 153, 0.85)";
                     card.style.borderColor = "rgba(52, 211, 153, 0.15)";
+                    btnColor = "rgba(52, 211, 153, 0.85)";
                 } else if (name === "Unproductive Failure") {
                     title.style.color = "var(--accent-yellow)";
                     card.style.borderColor = "rgba(245, 208, 0, 0.2)";
+                    btnColor = "var(--accent-yellow)";
                 } else {
                     title.style.color = "var(--accent)";
                     card.style.borderColor = "var(--rule)";
+                }
+                const gameBtn = document.getElementById('matrix-game-btn');
+                if (gameBtn) {
+                    gameBtn.style.background = btnColor;
+                    gameBtn.style.boxShadow = `0 0 15px ${btnColor}4D`;
                 }
                 gsap.to(card, { opacity: 1, x: 0, duration: 0.25 });
             }});
